@@ -3,6 +3,8 @@
 {% load static %}
 
 {% block product-detail %}
+
+
 <section class="section-content padding-y bg">
 <div class="container">
 <!-- ============================ COMPONENT 1 ================================= -->
@@ -34,8 +36,8 @@
 			<h6>Choose Color</h6>
 			<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
 				{% for pro in pro_colors %}
-					<label class="btn btn-light">
-			    		<input type="radio" name="radio_color"> {{ pro.color }}
+					<label class="btn btn-light" onclick="document.getElementById('main_img').src='{{pro.image.url}}'">
+			    		<input type="radio" name="radio_color" > {{ pro.color }}
 			  		</label>
 				{% endfor %}
 			</div> 

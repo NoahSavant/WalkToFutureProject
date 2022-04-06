@@ -8,7 +8,7 @@
 <meta http-equiv="cache-control" content="max-age=604800" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title>GreatKart | One of the Biggest Online Shopping Platform</title>
+<title>Walk to future</title>
 
 <link href="{% static 'store/images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
 
@@ -53,7 +53,7 @@ $(document).ready(function() {
   <div class="collapse navbar-collapse" id="navbarTop4">
     <ul class="navbar-nav mr-auto">
     	<li class="nav-item dropdown">
-		 	<a href="#" class="nav-link">   English </a>
+		 	<a href="#" class="nav-link">English </a>
 
 		</li>
 		<li class="nav-item dropdown">
@@ -72,7 +72,7 @@ $(document).ready(function() {
 	<div class="container">
 <div class="row align-items-center">
 	<div class="col-lg-2 col-md-3 col-6">
-		<a href="./" class="brand-wrap">
+		<a href="{%url 'index' %}" class="brand-wrap">
 			<img class="logo" src="{% static 'store/images/logo2.jpg' %}">
 		</a> <!-- brand-wrap.// -->
 	</div>
@@ -82,12 +82,12 @@ $(document).ready(function() {
 				<i class="fa fa-bars"></i> All category
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item" href="#">Machinery / Mechanical Parts / Tools </a>
-				<a class="dropdown-item" href="#">Consumer Electronics / Home Appliances </a>
-				<a class="dropdown-item" href="#">Auto / Transportation</a>
-				<a class="dropdown-item" href="#">Apparel / Textiles / Timepieces </a>
-				<a class="dropdown-item" href="#">Home & Garden / Construction / Lights </a>
-				<a class="dropdown-item" href="#">Beauty & Personal Care / Health </a>
+				<a class="dropdown-item" href="#">Men</a>
+				<a class="dropdown-item" href="#">Women</a>
+				<a class="dropdown-item" href="#">Sport</a>
+				<a class="dropdown-item" href="#">Fashion</a>
+				<a class="dropdown-item" href="#">Contact</a>
+				<a class="dropdown-item" href="#">Analyse</a>
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
@@ -110,8 +110,8 @@ $(document).ready(function() {
 					<div class="widget-header">
 						<small class="title text-muted">Welcome guest!</small>
 						<div>
-							<a href="./signin.html">Sign in</a> <span class="dark-transp"> | </span>
-							<a href="./register.html"> Register</a>
+							<a href="{%url 'login'%}">Sign in</a> <span class="dark-transp"> | </span>
+							<a href="{%url 'register'%}"> Register</a>
 						</div>
 					</div>
 					<a href="./cart.html" class="widget-header pl-3 ml-3">
@@ -144,7 +144,17 @@ $(document).ready(function() {
 {% endblock %}
 <!-- end product-detail.html -->
 
+<!-- signin.html -->
+{% block signin %}
 
+{% endblock %}
+<!-- end signin.html.html -->
+
+<!-- register.html -->
+{% block register %}
+
+{% endblock %}
+<!-- end register.html.html -->
 
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer border-top">

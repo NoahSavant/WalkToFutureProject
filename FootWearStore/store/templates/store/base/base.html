@@ -91,7 +91,7 @@ $(document).ready(function() {
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
-	<a href="./store.html" class="btn btn-outline-primary">Store</a>
+	<a href="{% url 'store' %}" class="btn btn-outline-primary">Store</a>
 	<div class="col-lg  col-md-6 col-sm-12 col">
 		<form action="#" class="search">
 			<div class="input-group w-100">
@@ -114,7 +114,7 @@ $(document).ready(function() {
 							<a href="{%url 'register'%}"> Register</a>
 						</div>
 					</div>
-					<a href="./cart.html" class="widget-header pl-3 ml-3">
+					<a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
 						<div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
 						<span class="badge badge-pill badge-danger notify">0</span>
 					</a>
@@ -148,25 +148,37 @@ $(document).ready(function() {
 {% block signin %}
 
 {% endblock %}
-<!-- end signin.html.html -->
+<!-- end signin.html -->
 
 <!-- register.html -->
 {% block register %}
 
 {% endblock %}
-<!-- end register.html.html -->
+<!-- end register.html -->
+
+<!-- cart.html -->
+{% block cart %}
+
+{% endblock %}
+<!-- end cart.html -->
+
+<!-- store.html -->
+{% block store %}
+
+{% endblock %}
+<!-- end store.html -->
 
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer border-top">
 	<div class="container">
 		<section class="footer-bottom border-top row">
 			<div class="col-md-2">
-				<p class="text-muted"> &copy 2019 Company name </p>
+				<p class="text-muted"> Nhóm 4 Python</p>
 			</div>
 			<div class="col-md-8 text-md-center">
-				<span  class="px-2">info@pixsellz.io</span>
-				<span  class="px-2">+879-332-9375</span>
-				<span  class="px-2">Street name 123, Avanue abc</span>
+				<span  class="px-2">20110655@student.hcmute.edu.vn</span>
+				<span  class="px-2">+840783511740</span>
+				<span  class="px-2">Số 1 Võ Văn Ngân, Thủ Đức</span>
 			</div>
 			<div class="col-md-2 text-md-right text-muted">
 				<i class="fab fa-lg fa-cc-visa"></i>

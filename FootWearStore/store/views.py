@@ -22,6 +22,10 @@ def product_detail(request, slug):
         'pro_colors': pro_colors,
         'sizes': list_size,
     })
+def cart(request):
+    return render(request,'store/cart.html')
+def store(request):
+    return render(request,'store/store.html')
 def login(request):
     return render(request,'store/signin.html')
 def register(request):

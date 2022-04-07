@@ -30,3 +30,7 @@ def login(request):
     return render(request,'store/signin.html')
 def register(request):
     return render(request,'store/register.html')
+def place_order(request):
+    return render(request,'store/place-order.html')
+def order_complete(request):
+    return render(request,'store/order_complete.html')

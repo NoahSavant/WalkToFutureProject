@@ -2,7 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from matplotlib import widgets
-class LoignForm(UserCreationForm):
+
+class RegisterForm(UserCreationForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':'form-control'}),
     )

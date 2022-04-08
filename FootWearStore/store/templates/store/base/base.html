@@ -110,8 +110,8 @@ $(document).ready(function() {
 					<div class="widget-header">
 						{% if request.user.is_authenticated %}
 						<small class="title text-muted">Welcome {{ user.get_username }}!</small>
-						<span>
-							<a href="{%url 'logout' %}">logout</a>
+						<span type="button">
+							<a href="{%url 'logout' %}"  >logout</a>
 						</span>
 						{% else %}
 						<small class="title text-muted">Welcome guest!</small>

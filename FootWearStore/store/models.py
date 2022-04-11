@@ -42,12 +42,28 @@ class Customer(models.Model):
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
             Customer.objects.create(user=instance)
+
 class Cart(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=1)
     def __str__(self):
         return self.product.name +" - "+ self.user.username
+
     @property
     def total(self):
         return self.product.price * self.quantity
+
+    def plus(self):
+        print("PlusssssssssssssBB", self.quantity)
+        if self.product.quantity == 0:
+            return
+        self.quantity = self.quantity + 1
+        print(self.quantity)
+
+    def minus(self):
+        print("MinusssssssssssssssBB", self.quantity)
+        if self.quantity == 0:
+            return
+        self.quantity = self.quantity - 1
+        print(self.quantity)

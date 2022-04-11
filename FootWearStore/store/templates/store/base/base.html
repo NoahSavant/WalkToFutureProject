@@ -1,4 +1,5 @@
 {% load static %}
+{% load tags %}
 
 <!DOCTYPE HTML>
 <html lang="en">
@@ -110,8 +111,8 @@ $(document).ready(function() {
 					<div class="widget-header">
 						{% if request.user.is_authenticated %}
 						<small class="title text-muted">Welcome {{ user.get_username }}!</small>
-						<span type="button">
-							<a href="{%url 'logout' %}"  >logout</a>
+						<span class="" >
+							<a href="{%url 'logout' %}" >Logout</a>
 						</span>
 						{% else %}
 						<small class="title text-muted">Welcome guest!</small>
@@ -123,7 +124,7 @@ $(document).ready(function() {
 					</div>
 					<a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
 						<div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-						<span class="badge badge-pill badge-danger notify">{{ countCart }}</span>
+						<span class="badge badge-pill badge-danger notify">{% countCart request %}</span>
 					</a>
 					
 				</div> <!-- widgets-wrap.// -->

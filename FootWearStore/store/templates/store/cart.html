@@ -36,19 +36,19 @@
 		<!-- col.// -->
 					<div class="col"> 
 						<div class="input-group input-spinner">
-							<div class="input-group-prepend">
-							<button class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
-							</div>
-							<input type="text" class="form-control"  value="1">
 							<div class="input-group-append">
-							<button class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
+							<button class="btn btn-light" id="button-plus" onclick="{{ order.plus }}" > <i class="fa fa-minus"></i> </button>
+							</div>
+							<input type="text" class="form-control"  value='{{ order.quantity }}'>
+							<div class="input-group-append">
+							<button class="btn btn-light" id="button-minus" onclick="{{ order.minus }}"> <i class="fa fa-plus"></i> </button>
 							</div>
 						</div> <!-- input-group.// -->
 					</div> <!-- col.// -->
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price">{{ order.product.price }}</var> 
+			<var class="price">{{ order.total }}</var>
 			<small class="text-muted"> {{ order.product.price }} each </small> 
 		</div> <!-- price-wrap .// -->
 	</td>

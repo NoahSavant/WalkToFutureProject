@@ -12,10 +12,8 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     products = models.Product.objects.all()
-    countCart = count_cart(request)
     return render(request, 'store/index.html', {
         'products' : products,
-        'countCart': countCart,
     })
 
 def product_detail(request, slug):
@@ -23,11 +21,17 @@ def product_detail(request, slug):
         color = request.POST['radio_color']
         size = request.POST['radio_size']
         products = models.Product.objects.filter(slug=slug, color = color, size=size)
-        cart = models.Cart()
-        print("AAAAAAAAAAAAAAAAAAAAAA")
-        cart.product=products[0]
-        cart.user=request.user
-        cart.save()
+        if len(products) == 0:
+            pass
+        list = models.Cart.objects.filter(product=products[0], user=request.user)
+        if len(list) == 0:
+            cart = models.Cart()
+            cart.product=products[0]
+            cart.user=request.user
+            cart.save()
+        else:
+            list[0].quantity = list[0].quantity + 1
+            list[0].save()
     products = models.Product.objects.filter(slug=slug)
     pro_colors = []
     list_size = []
@@ -88,18 +92,8 @@ def cart(request):
         order= models.Cart.objects.filter(user=customer)
     else:
         return redirect('login')
-    context = {'orders':order}
+    context = {'orders':order,}
     return render(request,'store/cart.html',context)
-    
-
-def count_cart(request):
-    if request.user.is_authenticated:
-        user = request.user
-        products = models.Cart.objects.filter(user=user)
-    i=0
-    for pro in products:
-        i=i+1
-    return i
 
 def store(request):
     return render(request,'store/store.html')

@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 # Create your models here.
+
+
+
 class Product(models.Model):
     name = models.CharField(max_length=200, null=False)
     price = models.FloatField(null=False)
@@ -39,3 +42,12 @@ class Customer(models.Model):
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
             Customer.objects.create(user=instance)
+class Cart(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    def __str__(self):
+        return self.product.name +" - "+ self.user.username
+    @property
+    def total(self):
+        return self.product.price * self.quantity

@@ -1,4 +1,5 @@
 from email import message
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from . import models
 from .models import Customer
@@ -11,11 +12,22 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     products = models.Product.objects.all()
+    countCart = count_cart(request)
     return render(request, 'store/index.html', {
         'products' : products,
+        'countCart': countCart,
     })
 
 def product_detail(request, slug):
+    if request.user.is_authenticated and request.method == "POST":
+        color = request.POST['radio_color']
+        size = request.POST['radio_size']
+        products = models.Product.objects.filter(slug=slug, color = color, size=size)
+        cart = models.Cart()
+        print("AAAAAAAAAAAAAAAAAAAAAA")
+        cart.product=products[0]
+        cart.user=request.user
+        cart.save()
     products = models.Product.objects.filter(slug=slug)
     pro_colors = []
     list_size = []
@@ -24,7 +36,7 @@ def product_detail(request, slug):
             pro_colors.append(pro)
         if pro.size not in list_size:
             list_size.append(pro.size)
-
+    
     return render(request, 'store/product-detail.html', {
         'products' : products,
         'pro_colors': pro_colors,
@@ -71,7 +83,23 @@ def logout(request):
 
 @login_required(login_url='login')
 def cart(request):
-    return render(request,'store/cart.html')
+    if request.user.is_authenticated:
+        customer = request.user
+        order= models.Cart.objects.filter(user=customer)
+    else:
+        return redirect('login')
+    context = {'orders':order}
+    return render(request,'store/cart.html',context)
+    
+
+def count_cart(request):
+    if request.user.is_authenticated:
+        user = request.user
+        products = models.Cart.objects.filter(user=user)
+    i=0
+    for pro in products:
+        i=i+1
+    return i
 
 def store(request):
     return render(request,'store/store.html')

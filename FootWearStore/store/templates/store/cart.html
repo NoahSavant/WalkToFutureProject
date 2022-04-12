@@ -5,7 +5,25 @@
 {% block cart%}
 <section class="section-content padding-y bg">
 <div class="container">
+<script>
+	function minus(id) {
+		var order = document.getElementById(id).innerHTML;
+		if(order > 0)
+		{
+			document.getElementById(id).innerHTML = order - 1;
+		}
+	}
 
+	function plus(id, max) {
+		var order = document.getElementById(id).innerHTML;
+		order = order -1 + 1
+		max = max - 1 + 1
+		if(order < max)
+		{
+			document.getElementById(id).innerHTML = order +1;
+		}
+	}
+</script>
 <!-- ============================ COMPONENT 1 ================================= -->
 
 <div class="row">
@@ -16,7 +34,7 @@
 <tr class="small text-uppercase">
   <th scope="col">Product</th>
   <th scope="col" width="120">Quantity</th>
-  <th scope="col" width="120">Price</th>
+  <th scope="col" width="150">Price</th>
   <th scope="col" class="text-right" width="200"> </th>
 </tr>
 </thead>
@@ -37,11 +55,11 @@
 					<div class="col"> 
 						<div class="input-group input-spinner">
 							<div class="input-group-append">
-							<button class="btn btn-light" id="button-plus" onclick="{{ order.plus }}" > <i class="fa fa-minus"></i> </button>
+							<button class="btn btn-light" id="button-minus" onclick="minus('{{order.product}}')" > <i class="fa fa-minus"></i> </button>
 							</div>
-							<input type="text" class="form-control"  value='{{ order.quantity }}'>
+							<label type="text" class="form-control" id="{{ order.product }}" >{{ order.quantity }}</label>
 							<div class="input-group-append">
-							<button class="btn btn-light" id="button-minus" onclick="{{ order.minus }}"> <i class="fa fa-plus"></i> </button>
+							<button class="btn btn-light" id="button-plus" onclick="plus('{{order.product}}', '{{ order.product.quantity }}')" > <i class="fa fa-plus"></i> </button>
 							</div>
 						</div> <!-- input-group.// -->
 					</div> <!-- col.// -->

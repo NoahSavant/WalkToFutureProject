@@ -1,5 +1,6 @@
 from django import template
 from store import models
+from store.models import Cart
 
 register = template.Library()
 

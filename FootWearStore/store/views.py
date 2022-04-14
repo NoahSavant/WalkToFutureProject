@@ -96,7 +96,8 @@ def cart(request):
     return render(request,'store/cart.html',context)
 
 def store(request):
-    return render(request,'store/store.html')
+    products = models.Product.objects.all()
+    return render(request,'store/store.html',{'product': products})
 
 @login_required(login_url='login')
 def place_order(request):
@@ -105,3 +106,4 @@ def place_order(request):
 @login_required(login_url='login')
 def order_complete(request):
     return render(request,'store/order_complete.html')
+

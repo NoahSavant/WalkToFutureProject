@@ -54,17 +54,12 @@ class Cart(models.Model):
     def total(self):
         return self.product.price * self.quantity
 
-    @property
     def plus(self):
-        if self.product.quantity == 0:
-            return 0
+        if self.product.quantity - self.quantity == 0:
+            return
         self.quantity = self.quantity + 1
-        return self.quantity
 
-    @property
     def minus(self):
-        print("Minussssssssssss")
         if self.quantity == 0:
-            return 0
+            return
         self.quantity = self.quantity - 1
-        return self.quantity

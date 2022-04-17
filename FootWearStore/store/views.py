@@ -79,7 +79,9 @@ def login(request):
             if request.user.has_perm('Staff status'):
                 return redirect('http://127.0.0.1:8000/admin/')
             return redirect('index')
-    return render(request,'store/signin.html')
+        else:
+            return render(request, 'store/signin.html', {'error': True})
+    return render(request,'store/signin.html', {'error': False})
 
 def logout(request):
     auth_logout(request)
@@ -89,10 +91,31 @@ def logout(request):
 def cart(request):
     if request.user.is_authenticated:
         customer = request.user
-        order= models.Cart.objects.filter(user=customer)
+        if request.method == "POST":
+            id = request.POST.get("id")
+            type = request.POST.get("type")
+            remove = request.POST.get("remove")
+            result = models.Cart.objects.filter(id=id)
+            if len(result) > 0:
+                order = result[0]
+                if remove == 'True':
+                    order.delete()
+                else:
+                    if type == "plus":
+                        order.plus()
+                    elif type == "minus":
+                        order.minus()
+                    if order.quantity == 0:
+                        order.delete()
+                    else:
+                        order.save()
+        orders = models.Cart.objects.filter(user=customer)
+        total = 0
+        for item in orders:
+            total = total + item.total
     else:
         return redirect('login')
-    context = {'orders':order,}
+    context = {'orders':orders, 'total': total}
     return render(request,'store/cart.html',context)
 
 def store(request):

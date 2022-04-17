@@ -5,25 +5,6 @@
 {% block cart%}
 <section class="section-content padding-y bg">
 <div class="container">
-<script>
-	function minus(id) {
-		var order = document.getElementById(id).innerHTML;
-		if(order > 0)
-		{
-			document.getElementById(id).innerHTML = order - 1;
-		}
-	}
-
-	function plus(id, max) {
-		var order = document.getElementById(id).innerHTML;
-		order = order -1 + 1
-		max = max - 1 + 1
-		if(order < max)
-		{
-			document.getElementById(id).innerHTML = order +1;
-		}
-	}
-</script>
 <!-- ============================ COMPONENT 1 ================================= -->
 
 <div class="row">
@@ -39,6 +20,8 @@
 </tr>
 </thead>
 <tbody>
+<form method="POST" action="">
+	{% csrf_token %}
 	{% for order in orders %}
 <tr>
 	<td>
@@ -55,11 +38,11 @@
 					<div class="col"> 
 						<div class="input-group input-spinner">
 							<div class="input-group-append">
-							<button class="btn btn-light" id="button-minus" onclick="minus('{{order.product}}')" > <i class="fa fa-minus"></i> </button>
+							<button class="btn btn-light" id="button-minus" onclick="document.getElementById('type').value = 'minus'; document.getElementById('id').value = '{{ order.id }}'" type="submit" > <i class="fa fa-minus"></i> </button>
 							</div>
-							<label type="text" class="form-control" id="{{ order.product }}" >{{ order.quantity }}</label>
+							<input type="text" disabled class="form-control" value="{{ order.quantity }}" />
 							<div class="input-group-append">
-							<button class="btn btn-light" id="button-plus" onclick="plus('{{order.product}}', '{{ order.product.quantity }}')" > <i class="fa fa-plus"></i> </button>
+							<button class="btn btn-light" id="button-plus" onclick="document.getElementById('type').value = 'plus'; document.getElementById('id').value = '{{ order.id }}'" type="submit" > <i class="fa fa-plus"></i> </button>
 							</div>
 						</div> <!-- input-group.// -->
 					</div> <!-- col.// -->
@@ -71,10 +54,14 @@
 		</div> <!-- price-wrap .// -->
 	</td>
 	<td class="text-right"> 
-	<a href="" class="btn btn-danger"> Remove</a>
+	<input class="btn btn-danger" value="Remove" onclick="document.getElementById('remove').value = 'True'; document.getElementById('id').value = '{{ order.id }}'" type="submit"/>
 	</td>
 </tr>
 	{% endfor %}
+	<input type="hidden" value="" id="id" name="id">
+	<input type="hidden" value="" id="type" name="type" >
+	<input type="hidden" value="" id="remove" name="remove" >
+	</form>
 </tbody>
 </table>
 </div> <!-- card.// -->
@@ -86,19 +73,19 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Total price:</dt>
-			  <dd class="text-right">$69.97</dd>
+			  <dd class="text-right">${{ total }}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Tax:</dt>
-			  <dd class="text-right"> $10.00</dd>
+			  <dd class="text-right"> $0</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Total:</dt>
-			  <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
+			  <dd class="text-right text-dark b"><strong>${{ total }}</strong></dd>
 			</dl>
 			<hr>
 			<p class="text-center mb-3">
-				<img src="./images/misc/payments.png" height="26">
+				<img src="{% static 'store/images/misc/payments.png' %}" height="26">
 			</p>
 			<a href="{% url 'place_order' %}" class="btn btn-primary btn-block"> Checkout </a>
 			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
@@ -113,5 +100,10 @@
 
 </div> <!-- container .//  -->
 </section>
+<script>
+if ( window.history.replaceState ) {
+  window.history.replaceState( null, null, window.location.href );
+}
+</script>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 {% endblock %}

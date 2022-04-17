@@ -27,6 +27,9 @@
               <button type="submit" class="btn btn-primary btn-block"> Login  </button>
           </div> <!-- form-group// -->    
       </form>
+        {% if error %}
+          <p class="errorlist">Username or password not correct!!</p>
+        {% endif %}
       </div> <!-- card-body.// -->
     </div> <!-- card .// -->
 

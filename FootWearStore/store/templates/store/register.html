@@ -72,6 +72,9 @@
 			    </div> <!-- form-group// -->      
 			        
 			</form>
+		  	{% if form.errors %}
+    			<p class="errorlist">Username or password not correct!!</p>
+			{% endif %}
 		</article><!-- card-body.// -->
     </div> <!-- card .// -->
     <p class="text-center mt-4">Have an account? <a href="{%url 'login'%}">Log In</a></p>

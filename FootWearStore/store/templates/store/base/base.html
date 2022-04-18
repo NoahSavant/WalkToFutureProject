@@ -110,7 +110,7 @@ $(document).ready(function() {
 				<div class="d-flex justify-content-end mb-3 mb-lg-0">
 					<div class="widget-header">
 						{% if request.user.is_authenticated %}
-						<small class="title text-muted">Welcome {{ user.get_username }}!</small>
+						<small class="title text-muted">Welcome {{ user }}!</small>
 						<span class="" >
 							<a href="{%url 'logout' %}" >Logout</a>
 						</span>

@@ -49,6 +49,7 @@
                       {{ pro.color }}
                     </label>
                     {% endfor %}
+
                   </div>
                 </div>
               </div>
@@ -61,7 +62,8 @@
                     data-toggle="buttons"
                   >
                     {% for size in sizes %}
-                    <label class="btn btn-light">
+                    {% if size == first %}
+                    <label class="btn btn-light active" >
                       <input
                         type="radio"
                         name="radio_size"
@@ -69,6 +71,16 @@
                       />
                       {{ size }}
                     </label>
+                    {% else %}
+                      <label class="btn btn-light" >
+                      <input
+                        type="radio"
+                        name="radio_size"
+                        value="{{ size }}"
+                      />
+                        {{ size }}
+                    </label>
+                    {% endif %}
                     {% endfor %}
                   </div>
                 </div>

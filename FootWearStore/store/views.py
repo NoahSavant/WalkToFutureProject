@@ -21,8 +21,6 @@ def product_detail(request, slug):
         color = request.POST['radio_color']
         size = request.POST['radio_size']
         products = models.Product.objects.filter(slug=slug, color = color, size=size)
-        if len(products) == 0:
-            pass
         list = models.Cart.objects.filter(product=products[0], user=request.user)
         if len(list) == 0:
             cart = models.Cart()
@@ -45,6 +43,7 @@ def product_detail(request, slug):
         'products' : products,
         'pro_colors': pro_colors,
         'sizes': list_size,
+        'first':list_size[0],
     })
 
 def register(request):
@@ -124,7 +123,13 @@ def store(request):
 
 @login_required(login_url='login')
 def place_order(request):
-    return render(request,'store/place-order.html')
+    if request.user.is_authenticated:
+        list = models.Cart.objects.filter(user= request.user)
+        total = 0
+        for item in list:
+            total = total + item.total
+    context = {'list': list, 'total': total, }
+    return render(request,'store/place-order.html', context)
 
 @login_required(login_url='login')
 def order_complete(request):

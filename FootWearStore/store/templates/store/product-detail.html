@@ -41,7 +41,7 @@
                     <label class="btn btn-light active" >
                       <input
                         type="radio"
-                        name="radio_size"
+                        name="radio_size" checked
                         value="{{ item.size }}"
                       />
                       {{ item.size }}
@@ -57,7 +57,6 @@
                     </label>
                     {% endif %}
                     {% endfor %}
-
                   </div>
                 </div>
               </div>
@@ -71,7 +70,7 @@
                     aria-disabled="true"
                   >
                     {% for item in size_quantity %}
-                    <label class="btn btn-light" aria-disabled="true">
+                    <label class="btn btn-light" >
                       {{ item.quantity }}
                     </label>
                     {% endfor %}
@@ -80,10 +79,11 @@
               </div>
               <!-- row.// -->
               <hr />
-              <button href="#" class="btn btn-primary" type="submit" onclick="document.getElementById('sw').value = 'atc'">
+              <button href="#" class="btn btn-primary" type="submit" onclick="document.getElementById('atc').value = 'atc'">
                 <span class="text">Add to cart</span>
                 <i class="fas fa-shopping-cart"></i>
               </button>
+              <input type="hidden" id="atc" name="sw" value="">
             </form>
           </article>
           <!-- product-info-aside .// -->

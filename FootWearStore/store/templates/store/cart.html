@@ -49,7 +49,7 @@
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price">${{ order.total }}</var>
+			<var class="price">${{ order.total|floatformat:2 }}</var>
 			<small class="text-muted"> ${{ order.sq.product.price }} each </small>
 		</div> <!-- price-wrap .// -->
 	</td>

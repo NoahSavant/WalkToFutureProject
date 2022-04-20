@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 # Create your views here.
 
 
@@ -18,32 +19,35 @@ def index(request):
 
 def product_detail(request, slug):
     if request.user.is_authenticated and request.method == "POST":
-        color = request.POST['radio_color']
-        size = request.POST['radio_size']
-        products = models.Product.objects.filter(slug=slug, color = color, size=size)
-        list = models.Cart.objects.filter(product=products[0], user=request.user)
-        if len(list) == 0:
-            cart = models.Cart()
-            cart.product=products[0]
-            cart.user=request.user
-            cart.save()
-        else:
-            list[0].quantity = list[0].quantity + 1
-            list[0].save()
-    products = models.Product.objects.filter(slug=slug)
-    pro_colors = []
-    list_size = []
-    for pro in products:
-        if pro.color not in pro_colors:
-            pro_colors.append(pro)
-        if pro.size not in list_size:
-            list_size.append(pro.size)
-    
+        sw = request.POST['sw']
+        product = models.Product.objects.get(slug=slug)
+        if sw == "atc":
+            size = request.POST['radio_size']
+            sqs = models.Size_Quantity.objects.filter(product=product, size=size)
+            list = models.Cart.objects.filter(sq=sqs[0], user=request.user)
+            if len(list) == 0:
+                cart = models.Cart()
+                cart.sq=sqs[0]
+                cart.user=request.user
+                cart.save()
+            else:
+                list[0].quantity = list[0].quantity + 1
+                list[0].save()
+        elif sw == "comment":
+            comment = request.POST['comment']
+            fb = models.Feedback()
+            fb.product = product
+            fb.user = request.user
+            fb.comment = comment
+            fb.time = datetime.now().strftime("%m/%d/%Y")
+            fb.save()
+    product = models.Product.objects.get(slug=slug)
+    size_quantity = models.Size_Quantity.objects.filter(product=product)
+    feedbacks = models.Feedback.objects.filter(product=product)
     return render(request, 'store/product-detail.html', {
-        'products' : products,
-        'pro_colors': pro_colors,
-        'sizes': list_size,
-        'first':list_size[0],
+        'size_quantity': size_quantity,
+        'first':size_quantity[0],
+        'feedbacks': feedbacks,
     })
 
 def register(request):

@@ -26,10 +26,10 @@
 <tr>
 	<td>
 		<figure class="itemside align-items-center">
-			<div class="aside"><img src="{{ order.product.image.url }}" class="img-sm"></div>
+			<div class="aside"><img src="{{ order.sq.product.image.url }}" class="img-sm"></div>
 			<figcaption class="info">
-				<a href="#" class="title text-dark">{{ order.product.name }}</a>
-				<p class="text-muted small">{{ order.product.description }} <br> Brand: {{ order.product.brand }}</p>
+				<a href="#" class="title text-dark">{{ order.sq.product.name }}</a>
+				<p class="text-muted small">{{ order.sq.product.description }} <br> Brand: {{ order.sq.product.brand }}</p>
 			</figcaption>
 		</figure>
 	</td>
@@ -49,8 +49,8 @@
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price">{{ order.total }}</var>
-			<small class="text-muted"> {{ order.product.price }} each </small> 
+			<var class="price">${{ order.total }}</var>
+			<small class="text-muted"> ${{ order.sq.product.price }} each </small>
 		</div> <!-- price-wrap .// -->
 	</td>
 	<td class="text-right"> 

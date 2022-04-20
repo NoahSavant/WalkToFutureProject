@@ -5,20 +5,35 @@ from django.dispatch import receiver
 # Create your models here.
 
 
-
 class Product(models.Model):
     name = models.CharField(max_length=200, null=False)
     price = models.FloatField(null=False)
     description = models.TextField()
     brand = models.CharField(max_length=150)
-    size = models.IntegerField()
-    quantity = models.IntegerField()
-    color = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images')
+    status = models.CharField(max_length=50)
     slug = models.SlugField()
 
     def __str__(self):
         return self.name
+
+
+class Size_Quantity(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.IntegerField()
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return self.product.name +" - "+ str(self.size)
+
+    def decre(self, num):
+        if num > self.quantity:
+            return
+        self.quantity = self.quantity - num
+
+    def incre(self, num):
+        self.quantity = self.quantity + num
+
 
 GENDER_CHOICES = (
     ('male', 'Male'),
@@ -44,18 +59,18 @@ class Customer(models.Model):
             Customer.objects.create(user=instance)
 
 class Cart(models.Model):
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    sq = models.ForeignKey(Size_Quantity, on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     def __str__(self):
-        return self.product.name +" - "+ self.user.username
+        return self.sq.product.name +" - "+ self.user.username
 
     @property
     def total(self):
-        return self.product.price * self.quantity
+        return self.sq.product.price * self.quantity
 
     def plus(self):
-        if self.product.quantity - self.quantity == 0:
+        if self.sq.quantity - self.quantity == 0:
             return
         self.quantity = self.quantity + 1
 
@@ -63,3 +78,12 @@ class Cart(models.Model):
         if self.quantity == 0:
             return
         self.quantity = self.quantity - 1
+
+class Feedback(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    time = models.CharField(max_length=30)
+    comment = models.TextField(max_length=300)
+
+    def __str__(self):
+        return str(self.product) + " - " + str(self.user)

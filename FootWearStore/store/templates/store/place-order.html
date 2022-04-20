@@ -19,10 +19,10 @@
 		{% for item in list %}
 		<div class="col-md-6">
 			<figure class="itemside  mb-4">
-				<div class="aside"><img src="{{ item.product.image.url }}" class="border img-sm"></div>
+				<div class="aside"><img src="{{ item.sq.product.image.url }}" class="border img-sm"></div>
 				<figcaption class="info">
-					<p>{{ item.product.name }}</p>
-					<span class="text-muted">{{ item.quantity }}x{{ item.product.price }} = {{ item.total }} </span>
+					<p>{{ item.sq.product.name }}</p>
+					<span class="text-muted">{{ item.quantity }}x{{ item.sq.product.price }} = {{ item.total }} </span>
 				</figcaption>
 			</figure>
 		</div> <!-- col.// -->
@@ -39,7 +39,7 @@
 		<div class="row">
 			<div class="form-group col-sm-6">
 				<label>Phone</label>
-				<input type="text" value="+(84): " class="form-control">
+				<input type="text" value="" class="form-control">
 			</div>
 			<div class="form-group col-sm-6">
 				<label>Address</label>

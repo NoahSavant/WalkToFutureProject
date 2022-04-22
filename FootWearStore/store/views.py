@@ -8,6 +8,7 @@ from .forms import RegisterForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -123,7 +124,15 @@ def cart(request):
 
 def store(request):
     products = models.Product.objects.all()
-    return render(request,'store/store.html',{'product': products})
+    product_paginator = Paginator(products,3)
+    page_num = request.GET.get('page')
+    pages = product_paginator.get_page(page_num)
+    
+    context = {
+        'product': products,
+        'page':pages    
+    }
+    return render(request,'store/store.html',context)
 
 @login_required(login_url='login')
 def place_order(request):

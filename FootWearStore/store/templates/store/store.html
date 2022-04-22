@@ -158,7 +158,7 @@
 </header><!-- sect-heading -->
 
 <div class="row">
-{% for  pro in product %}	
+{% for  pro in page.object_list %}	
 	<div class="col-md-4">
 		<figure class="card card-product-grid">
 			<div class="img-wrap"> 
@@ -179,14 +179,25 @@
 {% endfor %}	
 </div> <!-- row end.// -->
 
-
 <nav class="mt-4" aria-label="Page navigation sample">
   <ul class="pagination">
-    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+
+	{% if page.has_previous%}
+    <li class="page-item"><a class="page-link" href="{%url 'store' %}?page={{page.previous_page_number}}">Previous</a></li>
+	{% endif %}
+
+	{% for pages in page.paginator.page_range %}
+		{% if page.number == pages  %}
+			<li class="active page-item"><a class = "page-link" href="{%url 'store' %}?page={{pages }}">{{pages}}</a></li>
+		{% elif pages > page.number|add:'-2' and pages < page.number|add:'2' %}
+			<li class="page-item"><a class = "page-link" href="{%url 'store' %}?page={{pages }}">{{pages}}</a></li>
+		{% endif %}
+	{% endfor %}
+
+	{% if page.has_next%}
+    <li class="page-item"><a class="page-link" href="{%url 'store' %}?page={{page.next_page_number}}">Next</a></li>
+	{% endif %}
+	
   </ul>
 </nav>
 

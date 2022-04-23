@@ -1,6 +1,7 @@
 from email import message
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from numpy import size
 from . import models
 from .models import Customer
 from django.contrib.auth.forms import UserCreationForm
@@ -122,15 +123,74 @@ def cart(request):
     context = {'orders':orders, 'total': total}
     return render(request,'store/cart.html',context)
 
-def store(request):
+def store(request, brandCatetory):
     products = models.Product.objects.all()
-    product_paginator = Paginator(products,3)
+
+    
+    
+
+
+    # Get objects by brand catetory
+    if brandCatetory == "All":
+        _list = products
+    else:
+        _list = models.Product.objects.filter(brand= brandCatetory)
+    # end get objects by brand catetory
+
+   
+
+
+    # get distinct brand and size 
+    sizeQuantity = models.Size_Quantity.objects.all()
+    brand = ["All"]
+    size = []
+   
+    
+    for pro in products:
+        if pro.brand not in brand:
+            brand.append(pro.brand)
+
+    for pro in sizeQuantity:
+        if pro.size not in size:
+            size.append(pro.size)
+
+    # end get distinct brand and size 
+
+    # filter by size
+    if request.method=="POST":
+        sizeCatetory = request.POST.getlist('sizeCatetory')
+    else:
+        sizeCatetory = []
+    if len(sizeCatetory) > 0:
+
+        list = []
+        for item in sizeQuantity:
+            if str(item.size) in sizeCatetory and item.product not in list and item.product in _list:   
+                list.append(item.product)
+    else:
+        list = _list
+
+    
+    #end filter by size
+
+
+    # sort size   
+    size.sort()
+
+    # page paginator
+    product_paginator = Paginator(list,1)
     page_num = request.GET.get('page')
     pages = product_paginator.get_page(page_num)
-    
+    # end page paginator
+
+
     context = {
         'product': products,
-        'page':pages    
+        'page':pages,    
+        'itemFound': len(list),
+        'brand': brand,
+        'size': size,
+        'brandCatetory': brandCatetory
     }
     return render(request,'store/store.html',context)
 

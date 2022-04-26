@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block order_complete%}
+{% block order_complete %}
 <div class="container" style="margin-top: 50px;">
     <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
     <h2 class="text-center">Payment Successful</h2>
@@ -31,10 +31,9 @@
                             <div class="invoice-from">
                                 <ul class="list-unstyled text-right">
                                     <li><strong>Invoiced To</strong></li>
-                                    <li>Jakob Smith</li>
-                                    <li>Roupark 37</li>
-                                    <li>New York, NY, 2014</li>
-                                    <li>USA</li>
+                                    <li>{{ request.user.first_name }} {{ request.user.last_name }}</li>
+                                    <li>{{ customer.city }}</li>
+                                    <li>{{ customer.country }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -44,10 +43,9 @@
                             <div class="invoice-details mt25">
                                 <div class="well">
                                     <ul class="list-unstyled mb0">
-                                        <li><strong>Order</strong> #</li>
-                                        <li><strong>Transaction</strong> #</li>
-                                        <li><strong>Order Date:</strong> Monday, October 10th, 2015</li>
-                                        <li><strong>Status:</strong> PAID</li>
+                                        <li><strong>Order: </strong>{{ info.order }}</li>
+                                        <li><strong>Order Date: </strong>{{ info.date }}</li>
+                                        <li><strong>Status: </strong>PAID</li>
                                     </ul>
                                 </div>
                             </div>
@@ -57,41 +55,33 @@
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th class="per70 text-center">Description</th>
-                                                <th class="per5 text-center">Qty</th>
+                                                <th class="per55 text-center">Name</th>
+                                                <th class="per20 text-center">Quantity</th>
                                                 <th class="per25 text-center">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {% for order in orders %}
                                             <tr>
-                                                <td>1024MB Cloud 2.0 Server - elisium.dynamic.com (12/04/2014 - 01/03/2015)</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">$25.00 USD</td>
+                                                <td>{{ order.sq.product.name }}</td>
+                                                <td class="text-center">{{ order.quantity }}</td>
+                                                <td class="text-center">${{ order.sq.product.price }} USD</td>
                                             </tr>
-                                            <tr>
-                                                <td>Logo design</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">$200.00 USD</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Backup - 1024MB Cloud 2.0 Server - elisium.dynamic.com</td>
-                                                <td class="text-center">12</td>
-                                                <td class="text-center">$12.00 USD</td>
-                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">$237.00 USD</th>
+                                                <th class="text-center">${{ total }} USD</th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">$47.40 USD</th>
+                                                <th class="text-center">$0 USD</th>
                                             </tr>
                                             
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">$284.4.40 USD</th>
+                                                <th class="text-center">${{ total }} USD</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -111,4 +101,4 @@
         <!-- col-lg-12 end here -->
     </div>
     </div>
-    {% endblock %}
+{% endblock %}

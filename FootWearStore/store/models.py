@@ -40,9 +40,9 @@ GENDER_CHOICES = (
     ('female', 'Female'),
 )
 COUNTRY_CHOICES = (
-    ('vietNam','Việt Nam'),
-    ('unitedStates', 'United States'),
-    ('russia','russia'),
+    ('Việt Nam','Việt Nam'),
+    ('United States', 'United States'),
+    ('Russia','Russia'),
 )
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -62,6 +62,7 @@ class Cart(models.Model):
     sq = models.ForeignKey(Size_Quantity, on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+
     def __str__(self):
         return self.sq.product.name +" - "+ self.user.username
 

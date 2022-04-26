@@ -132,15 +132,12 @@ def getNumber(str):
     return int(emp_lis)
 
 def store(request, brandCategory, sizeCategory, priceCategory):
-   
     if sizeCategory == "All" or sizeCategory == '[]':       
         sizeCategory = []
     if priceCategory == "All":
         priceCategory = ['0','10000']
     products = models.Product.objects.all()
 
-
-    
     # Get objects by brand catetory
     if brandCategory == "All":
         _list = products
@@ -148,15 +145,11 @@ def store(request, brandCategory, sizeCategory, priceCategory):
         _list = models.Product.objects.filter(brand= brandCategory)
     # end get objects by brand catetory
 
-
-
-   
     # get distinct brand and size 
     sizeQuantity = models.Size_Quantity.objects.all()
     brand = ["All"]
     size = []
-   
-    
+
     for pro in products:
         if pro.brand not in brand:
             brand.append(pro.brand)
@@ -164,7 +157,6 @@ def store(request, brandCategory, sizeCategory, priceCategory):
     for pro in sizeQuantity:
         if str(pro.size) not in size:
             size.append(str(pro.size))
-
     # end get distinct brand and size 
 
     if request.method=="POST":
@@ -180,7 +172,6 @@ def store(request, brandCategory, sizeCategory, priceCategory):
                 list.append(item.product)
     else:
         list = _list
-
     #end filter by size
 
     #filter by price
@@ -193,10 +184,8 @@ def store(request, brandCategory, sizeCategory, priceCategory):
         if item.price >= _min and item.price <= _max:
             priceList.append(item)    
     list = priceList
-
     #end filter by price
 
-  
     # sort size   
     size.sort()
 
@@ -227,6 +216,10 @@ def store(request, brandCategory, sizeCategory, priceCategory):
 @login_required(login_url='login')
 def place_order(request):
     if request.user.is_authenticated:
+        if request.method == "POST":
+            request.session['phone'] = request.POST.get('phone')
+            request.session['address'] = request.POST.get('address')
+            return redirect("order_complete")
         list = models.Cart.objects.filter(user= request.user)
         total = 0
         for item in list:
@@ -236,5 +229,23 @@ def place_order(request):
 
 @login_required(login_url='login')
 def order_complete(request):
-    return render(request,'store/order_complete.html')
+    phone = request.session['phone']
+    address = request.session['address']
+    customer = models.Customer.objects.get(user=request.user)
+    info = {}
+    info['order'] = request.user.id
+    info['date'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    orders = models.Cart.objects.filter(user=request.user)
+    total = 0
+    for order in orders:
+        total = total + order.total
+
+    return render(request,'store/order_complete.html', {
+        'phone': phone,
+        'address': address,
+        'customer': customer,
+        'orders': orders,
+        'total': total,
+        'info': info
+    })
 

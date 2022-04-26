@@ -123,23 +123,34 @@ def cart(request):
     context = {'orders':orders, 'total': total}
     return render(request,'store/cart.html',context)
 
-def store(request, brandCatetory):
+def getNumber(str):
+    emp_lis = ''
+    for z in str:
+        if z.isdigit():
+            emp_lis = emp_lis + z
+   
+    return int(emp_lis)
+
+def store(request, brandCategory, sizeCategory, priceCategory):
+   
+    if sizeCategory == "All" or sizeCategory == '[]':       
+        sizeCategory = []
+    if priceCategory == "All":
+        priceCategory = ['0','10000']
     products = models.Product.objects.all()
 
-    
-    
 
-
+    
     # Get objects by brand catetory
-    if brandCatetory == "All":
+    if brandCategory == "All":
         _list = products
     else:
-        _list = models.Product.objects.filter(brand= brandCatetory)
+        _list = models.Product.objects.filter(brand= brandCategory)
     # end get objects by brand catetory
 
+
+
    
-
-
     # get distinct brand and size 
     sizeQuantity = models.Size_Quantity.objects.all()
     brand = ["All"]
@@ -151,38 +162,53 @@ def store(request, brandCatetory):
             brand.append(pro.brand)
 
     for pro in sizeQuantity:
-        if pro.size not in size:
-            size.append(pro.size)
+        if str(pro.size) not in size:
+            size.append(str(pro.size))
 
     # end get distinct brand and size 
 
-    # filter by size
     if request.method=="POST":
-        sizeCatetory = request.POST.getlist('sizeCatetory')
-    else:
-        sizeCatetory = []
-    if len(sizeCatetory) > 0:
-
+        sizeCategory = request.POST.getlist('sizeCategory')
+        min = request.POST.get('min')
+        max = request.POST.get('max')
+        priceCategory = [min,max]
+    # filter by size
+    if len(sizeCategory) > 0:
         list = []
         for item in sizeQuantity:
-            if str(item.size) in sizeCatetory and item.product not in list and item.product in _list:   
+            if str(item.size) in sizeCategory and item.product not in list and item.product in _list:   
                 list.append(item.product)
     else:
         list = _list
 
-    
     #end filter by size
 
+    #filter by price
+    _min = getNumber(str(priceCategory).split(',')[0])
+    _max = getNumber(str(priceCategory).split(',')[1])
+    priceCategory = [str(_min),str(_max)]
+    priceList = []
+    
+    for item in list:
+        if item.price >= _min and item.price <= _max:
+            priceList.append(item)    
+    list = priceList
 
+    #end filter by price
+
+  
     # sort size   
     size.sort()
 
     # page paginator
     product_paginator = Paginator(list,1)
     page_num = request.GET.get('page')
+    
     pages = product_paginator.get_page(page_num)
     # end page paginator
 
+    listMin = ['0','50','70','100','200','500','1000']
+    listMax = ['50','70','100','200','500','1000','10000']
 
     context = {
         'product': products,
@@ -190,7 +216,11 @@ def store(request, brandCatetory):
         'itemFound': len(list),
         'brand': brand,
         'size': size,
-        'brandCatetory': brandCatetory
+        'listBrandCategory': brandCategory,
+        'listSizeCategory': sizeCategory,
+        'listPriceCategory':priceCategory,
+        'listMin':listMin,
+        'listMax':listMax,
     }
     return render(request,'store/store.html',context)
 

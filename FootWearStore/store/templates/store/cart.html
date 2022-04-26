@@ -88,7 +88,7 @@
 				<img src="{% static 'store/images/misc/payments.png' %}" height="26">
 			</p>
 			<a href="{% url 'place_order' %}" class="btn btn-primary btn-block"> Checkout </a>
-			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+			<a href="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='[0,10000]' %}" class="btn btn-light btn-block">Continue Shopping</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 

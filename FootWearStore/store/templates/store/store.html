@@ -32,7 +32,11 @@
 				
 				<ul class="list-menu">
 				{% for item in brand %}
-				<li><a href="{%url 'store' item %}">{{item}}  </a></li>
+					{% if item == listBrandCategory %}
+						<li  class = "active page-item" ><a class ="page-link" href="{% url 'store' brandCategory=item sizeCategory='All' priceCategory='All' %}">{{item}}  </a></li>
+					{%else%}
+						<li class = "page-item"><a class ="page-link" href="{% url 'store' brandCategory=item sizeCategory='All' priceCategory='All'  %}">{{item}}  </a></li>
+					{% endif %}
 				{% endfor %}
 				</ul>
 
@@ -51,8 +55,12 @@
 			<div class="filter-content collapse show" id="collapse_4" style="">
 				<div class="card-body">
 				{% for item in size %}
-				<label class="checkbox-btn">
-					<input type="checkbox" name = "sizeCatetory" value = {{item}}>
+				<label class="checkbox-btn ">
+					{% if item in listSizeCategory %}
+						<input checked type="checkbox" name = "sizeCategory" value = {{item}}>
+					{% else %}
+						<input  type="checkbox" name = "sizeCategory" value = {{item}}>
+					{% endif %}
 					<span class="btn btn-light" > {{item}} </span>
 				</label>
 				{% endfor %}
@@ -74,26 +82,26 @@
 					<div class="form-group col-md-6">
 					<label>Min</label>
 					<!-- <input class="form-control" placeholder="$0" type="number"> -->
-						<select class="mr-2 form-control">
-							<option value="0">$0</option>
-							<option value="50">$50</option>
-							<option value="100">$100</option>
-							<option value="150">$150</option>
-							<option value="200">$200</option>
-							<option value="500">$500</option>
-							<option value="1000">$1000</option>
+						<select class="mr-2 form-control" name = "min">
+							{% for i in listMin %}
+								{% if i == listPriceCategory.0 %}
+									<option selected value="{{i}}">${{i}}</option>
+								{% else %}
+									<option value="{{i}}">${{i}}</option>
+								{%endif %}
+							{% endfor %}
 						</select>
 					</div>
 					<div class="form-group text-right col-md-6">
 					<label>Max</label>
-						<select class="mr-2 form-control">
-							<option value="50">$50</option>
-							<option value="100">$100</option>
-							<option value="150">$150</option>
-							<option value="200">$200</option>
-							<option value="500">$500</option>
-							<option value="1000">$1000</option>
-							<option value="2000">$2000+</option>
+						<select class="mr-2 form-control"  name = "max">
+							{% for i in listMax %}
+								{% if i == listPriceCategory.1 %}
+									<option selected value="{{i}}">${{i}}</option>
+								{% else %}
+									<option value="{{i}}">${{i}}</option>
+								{%endif %}
+							{% endfor %}			
 						</select>
 					</div>
 					</div> <!-- form-row.// -->
@@ -115,44 +123,51 @@
 </header><!-- sect-heading -->
 
 <div class="row">
-{% for  pro in page.object_list %}	
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="{{pro.image.url}}">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="{% url 'detail' pro.slug %}" class="title">{{pro.name}}</a>
-					<div class="price-wrap mt-2">
-						<span class="price">{{pro.price}}</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
-{% endfor %}	
+{% if page.object_list|length > 0 %}
+	{% for  pro in page.object_list %}	
+		<div class="col-md-4">
+			<figure class="card card-product-grid">
+				<div class="img-wrap"> 
+					<img src="{{pro.image.url}}">
+					
+				</div> <!-- img-wrap.// -->
+				<figcaption class="info-wrap">
+					<div class="fix-height">
+						<a href="{% url 'detail' pro.slug %}" class="title">{{pro.name}}</a>
+						<div class="price-wrap mt-2">
+							<span class="price">{{pro.price}}</span>
+						</div> <!-- price-wrap.// -->
+					</div>
+					<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
+				</figcaption>
+			</figure>
+		</div> <!-- col.// -->
+	{% endfor %}	
+{% else %}
+<div class ="alert alert-danger">
+	<strong>NOT FOUND!!</strong>
+</div>
+		
+{% endif %}
 </div> <!-- row end.// -->
 
 <nav class="mt-4" aria-label="Page navigation sample">
   <ul class="pagination">
 
 	{% if page.has_previous%}
-    <li class="page-item"><a class="page-link" href="{%url 'store' brandCatetory %}?page={{page.previous_page_number}}">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory %}?page={{page.previous_page_number}}">Previous</a></li>
 	{% endif %}
 
 	{% for pages in page.paginator.page_range %}
 		{% if page.number == pages  %}
-			<li class="active page-item"><a class = "page-link" href="{%url 'store' brandCatetory %}?page={{pages }}">{{pages}}</a></li>
+			<li class="active page-item"><a class = "page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory %}?page={{pages }}">{{pages}}</a></li>
 		{% elif pages > page.number|add:'-3' and pages < page.number|add:'3' %}
-			<li class="page-item"><a class = "page-link" href="{%url 'store' brandCatetory %}?page={{pages }}">{{pages}}</a></li>
+			<li class="page-item"><a class = "page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory%}?page={{pages }}">{{pages}}</a></li>
 		{% endif %}
 	{% endfor %}
 
 	{% if page.has_next%}
-    <li class="page-item"><a class="page-link" href="{%url 'store' brandCatetory %}?page={{page.next_page_number}}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory %}?page={{page.next_page_number}}">Next</a></li>
 	{% endif %}
 	
   </ul>

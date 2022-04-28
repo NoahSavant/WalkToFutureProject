@@ -6,8 +6,10 @@ register = template.Library()
 
 @register.simple_tag
 def countCart(request):
-    products = []
+    total = 0
     if request.user.is_authenticated:
         user = request.user
-        products = models.Cart.objects.filter(user=user)
-    return len(products)
+        orders = models.Cart.objects.filter(user=user)
+        for order in orders:
+            total = total + order.quantity
+    return total

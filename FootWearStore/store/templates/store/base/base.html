@@ -97,7 +97,6 @@ $(document).ready(function() {
 		<form action="#" class="search">
 			<div class="input-group w-100">
 			    <input type="text" class="form-control" style="width:60%;" placeholder="Search">
-
 			    <div class="input-group-append">
 			      <button class="btn btn-primary" type="submit">
 			        <i class="fa fa-search"></i>
@@ -110,7 +109,13 @@ $(document).ready(function() {
 				<div class="d-flex justify-content-end mb-3 mb-lg-0">
 					<div class="widget-header">
 						{% if request.user.is_authenticated %}
-						<small class="title text-muted">Welcome {{ request.user.first_name }} {{ request.user.last_name }} !</small>
+						<div class="icontext w-100">
+							<img
+								src="{% static 'store/images/avatars/default_avatar.jpg' %}"
+								class="img-xs icon rounded-circle"
+            				/>
+							<small class="title text-muted">Welcome <br>{{ request.user.first_name }} {{ request.user.last_name }} !</small>
+						</div>
 						<span class="" >
 							<a href="{%url 'logout' %}" >Logout</a>
 						</span>

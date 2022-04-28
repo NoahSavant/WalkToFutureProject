@@ -36,27 +36,51 @@
                     class="btn-group btn-group-sm btn-group-toggle"
                     data-toggle="buttons"
                   >
-                    {% for item in size_quantity %}
+                  {% for item in size_quantity %}
                     {% if item.size == first.size %}
-                    <label class="btn btn-light active" >
-                      <input
-                        type="radio"
-                        name="radio_size" checked
-                        value="{{ item.size }}"
-                      />
-                      {{ item.size }}
-                    </label>
+                      {% if item.size == 0 %}
+                        <label class="btn btn-light active" >
+                          <input
+                            disabled
+                            type="radio"
+                            name="radio_size" checked
+                            value="{{ item.size }}"
+                          />
+                          {{ item.size }}
+                        </label>
+                      {% else %}
+                        <label class="btn btn-light active" >
+                          <input
+                            type="radio"
+                            name="radio_size" checked
+                            value="{{ item.size }}"
+                          />
+                          {{ item.size }}
+                        </label>
+                      {% endif %}
                     {% else %}
-                      <label class="btn btn-light" >
-                      <input
-                        type="radio"
-                        name="radio_size"
-                        value="{{ item.size }}"
-                      />
-                        {{ item.size }}
-                    </label>
+                      {% if item.size == 0 %}
+                        <label class="btn btn-light" >
+                          <input
+                            disabled
+                            type="radio"
+                            name="radio_size"
+                            value="{{ item.size }}"
+                          />
+                          {{ item.size }}
+                        </label>
+                      {% else %}
+                        <label class="btn btn-light">
+                          <input
+                            type="radio"
+                            name="radio_size"
+                            value="{{ item.size }}"
+                          />
+                          {{ item.size }}
+                        </label>
+                      {% endif %}
                     {% endif %}
-                    {% endfor %}
+                  {% endfor %}
                   </div>
                 </div>
               </div>
@@ -104,11 +128,25 @@
         </header>
         <form method="POST" action="">
           {% csrf_token %}
-          <label>Tôi: </label>
-          <input type="text" name="comment" value="">
-          <button type="submit" onclick="document.getElementById('sw').value = 'comment'">Post</button>
-          <input type="hidden" id="sw" name="sw" value="">
+          <article class="box mb-3">
+            <div class="icontext w-100">
+              <img
+                src="{% static 'store/images/avatars/default_avatar.jpg' %}"
+                class="img-xs icon rounded-circle"
+              />
+              <input type="text" class="form-control" style="width:60%;" placeholder="Comment..." name="comment">
+              <div class="input-group-append">
+			      <button class="btn btn-primary" type="submit" onclick="document.getElementById('sw').value = 'comment'">
+			        <img src="{% static 'store/images/icons/comment.png' %}">
+			      </button>
+              </div>
+              <label >Star</label>
+              <input type="number" min="1" max="5">
+              <input type="hidden" id="sw" name="sw" value="">
+            </div>
+          </article>
         </form>
+        <br>
         {% for fb in feedbacks %}
         <article class="box mb-3">
           <div class="icontext w-100">
@@ -118,7 +156,7 @@
             />
             <div class="text">
               <span class="date text-muted float-md-right">{{ fb.time }}</span>
-              <h6 class="mb-1">{{ fb.user }}</h6>
+              <h6 class="mb-1">{{ fb.user.first_name }} {{ fb.user.last_name }}</h6>
             </div>
           </div>
           <!-- icontext.// -->

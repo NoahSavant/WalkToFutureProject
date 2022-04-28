@@ -4,10 +4,9 @@
 
 {% block store %}
 <!-- ========================= SECTION PAGETOP ========================= -->
-<section class="section-pagetop bg">
+<section class="section-pagetop bg" >
 <div class="container">
 	<h2 class="title-page">Our Store</h2>
-	
 </div> <!-- container //  -->
 </section>
 <!-- ========================= SECTION INTRO END// ========================= -->
@@ -29,7 +28,6 @@
 		</header>
 		<div class="filter-content collapse show" id="collapse_1" style="">
 			<div class="card-body">
-				
 				<ul class="list-menu">
 				{% for item in brand %}
 					{% if item == listBrandCategory %}
@@ -77,7 +75,6 @@
 			</header>
 			<div class="filter-content collapse show" id="collapse_3" style="">
 				<div class="card-body">
-					
 					<div class="form-row">
 					<div class="form-group col-md-6">
 					<label>Min</label>
@@ -117,7 +114,7 @@
 
 <header class="border-bottom mb-4 pb-3">
 		<div class="form-inline">
-			<span class="mr-md-auto">{{itemFound}} Items found </span>
+			<span class="mr-md-auto">{{ itemFound }} Items found </span>
 			
 		</div>
 </header><!-- sect-heading -->
@@ -128,7 +125,7 @@
 		<div class="col-md-4">
 			<figure class="card card-product-grid">
 				<div class="img-wrap"> 
-					<img src="{{pro.image.url}}">
+					<img src="{{ pro.image.url }}">
 					
 				</div> <!-- img-wrap.// -->
 				<figcaption class="info-wrap">
@@ -138,7 +135,7 @@
 							<span class="price">{{pro.price}}</span>
 						</div> <!-- price-wrap.// -->
 					</div>
-					<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
+					<a href="{% url 'detail' pro.slug %}" class="btn btn-block btn-primary">Add to cart </a>
 				</figcaption>
 			</figure>
 		</div> <!-- col.// -->

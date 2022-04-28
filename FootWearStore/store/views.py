@@ -14,7 +14,7 @@ from django.core.paginator import Paginator
 
 
 def index(request):
-    products = models.Product.objects.all()
+    products = models.Product.objects.filter(status="Hot")
     return render(request, 'store/index.html', {
         'products' : products,
     })
@@ -28,21 +28,23 @@ def product_detail(request, slug):
             sqs = models.Size_Quantity.objects.filter(product=product, size=size)
             list = models.Cart.objects.filter(sq=sqs[0], user=request.user)
             if len(list) == 0:
-                cart = models.Cart()
-                cart.sq=sqs[0]
-                cart.user=request.user
-                cart.save()
+                new_cart = models.Cart()
+                new_cart.sq = sqs[0]
+                new_cart.user = request.user
+                new_cart.save()
             else:
                 list[0].quantity = list[0].quantity + 1
                 list[0].save()
         elif sw == "comment":
             comment = request.POST['comment']
-            fb = models.Feedback()
-            fb.product = product
-            fb.user = request.user
-            fb.comment = comment
-            fb.time = datetime.now().strftime("%m/%d/%Y")
-            fb.save()
+            comment = comment.strip(" ")
+            if comment != "":
+                fb = models.Feedback()
+                fb.product = product
+                fb.user = request.user
+                fb.comment = comment
+                fb.time = datetime.now().strftime("%m/%d/%Y")
+                fb.save()
     product = models.Product.objects.get(slug=slug)
     size_quantity = models.Size_Quantity.objects.filter(product=product)
     feedbacks = models.Feedback.objects.filter(product=product)
@@ -78,7 +80,7 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request,username=username,password = password)
+        user = authenticate(request,username=username,password=password)
         if user is not None:
             auth_login(request,user)
             if request.user.has_perm('Staff status'):

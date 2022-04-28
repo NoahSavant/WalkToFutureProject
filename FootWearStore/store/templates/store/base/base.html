@@ -8,7 +8,11 @@
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="cache-control" content="max-age=604800" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="{% static 'store/css/style.css' %}">
 <title>Walk to future</title>
 
 <link href="{% static 'store/images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
@@ -83,12 +87,9 @@ $(document).ready(function() {
 				<i class="fa fa-bars"></i> All category
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item" href="#">Men</a>
-				<a class="dropdown-item" href="#">Women</a>
-				<a class="dropdown-item" href="#">Sport</a>
-				<a class="dropdown-item" href="#">Fashion</a>
-				<a class="dropdown-item" href="#">Contact</a>
-				<a class="dropdown-item" href="#">Analyse</a>
+				<a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
+				<a class="dropdown-item" href="#">Analyses</a>
+
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
@@ -192,6 +193,11 @@ $(document).ready(function() {
 {% block order_complete%}
 {% endblock %}
 <!-- end order_complete.html -->
+
+<!-- contact.html -->
+{% block contact %}
+{% endblock %}
+<!-- end contact.html -->
 
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer border-top">

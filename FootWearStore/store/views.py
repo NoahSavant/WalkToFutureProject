@@ -251,3 +251,5 @@ def order_complete(request):
         'info': info
     })
 
+def contact(request):
+    return render(request,'store/contact.html')

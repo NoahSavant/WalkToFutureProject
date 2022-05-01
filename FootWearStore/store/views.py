@@ -1,4 +1,4 @@
-from email import message
+from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from numpy import size
@@ -10,6 +10,8 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.core.paginator import Paginator
+from django.template.loader import render_to_string
+from django.conf import settings
 # Create your views here.
 
 
@@ -53,7 +55,8 @@ def product_detail(request, slug):
         'first':size_quantity[0],
         'feedbacks': feedbacks,
     })
-
+def register_successfully(request):
+    return render(request,'store/RegisterSuccessfully.html')
 def register(request):
     # don't allow user to go back register page when already login
     if request.user.is_authenticated:
@@ -62,6 +65,21 @@ def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
+            emailUser = request.POST.get('email')
+            first_nameUser = request.POST.get('first_name')
+            subject = 'REGISTER SUCCESSFULLY'
+            body = render_to_string('store/RegisterSuccessfully.html')
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [emailUser]
+            email = EmailMessage(
+                subject,
+                body,
+                from_email,
+                to_list
+            )
+            email.fail_silently=False
+            email.content_subtype='html'
+            email.send()
             form.save()
             list = Customer.objects.all()
             customer = list[len(list)-1]
@@ -69,7 +87,7 @@ def register(request):
             customer.city = request.POST['city']
             customer.country = request.POST['country']
             customer.save()
-            return redirect('login')
+            return redirect('register_successfully')
     context = {'form':form}
     return render(request,'store/register.html',context)
 

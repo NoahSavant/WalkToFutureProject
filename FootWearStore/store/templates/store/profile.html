@@ -26,24 +26,69 @@
 		</header>
 		<div class="card-body">
 			<div class="row"> 
-				<div class="col-md-8">
-					<h6 class="text-muted">Delivery to</h6>
-					<p>Michael Jackson <br>  
-					Phone +1234567890 Email: myname@pixsellz.com <br>
-			    	Location: Home number, Building name, Street 123,  Tashkent, UZB <br> 
-			    	P.O. Box: 100123
-			 		</p>
-				</div>
 				<div class="col-md-4">
-					<h6 class="text-muted">Payment</h6>
-					<span class="text-success">
-						<i class="fab fa-lg fa-cc-visa"></i>
-					    Visa  **** 4216  
-					</span>
-					<p>Subtotal: $356 <br>
-					 Shipping fee:  $56 <br> 
-					 <span class="b">Total:  $456 </span>
-					</p>
+					<div class="icontext w-100">
+						<img
+						src="{% static 'store/images/avatars/default_avatar.jpg' %}"
+						class="img-xs rounded-circle"
+						id="avatar"
+						/>
+						<label class="title text-muted"><br>{{ request.user.first_name }} {{ request.user.last_name }} !</label>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<h6 class="text-muted">Infomation</h6>
+					<p>Email: {{ request.user.email }} </p>
+					<form method="POST" action="">
+						{% csrf_token %}
+						{% if not edit %}
+							<input disabled name="first_name" value="{{ request.user.first_name }}">
+							<input disabled name="last_name" value="{{ request.user.last_name }}">
+							<input disabled name="city" value="{{ cus.city }}">
+							<div id="gender" class="form-group">
+								{% if cus.gender == 'male' %}
+								<label class="custom-control custom-radio custom-control-inline">
+								    <input disabled class="custom-control-input" checked="" type="radio" name="gender" value="male">
+								    <span class="custom-control-label"> Male </span>
+								</label>
+								<label class="custom-control custom-radio custom-control-inline">
+								    <input disabled class="custom-control-input" type="radio" name="gender" value="female">
+								    <span class="custom-control-label"> Female </span>
+								</label>
+								{% else %}
+								<label class="custom-control custom-radio custom-control-inline">
+								    <input disabled class="custom-control-input" type="radio" name="gender" value="male">
+								    <span class="custom-control-label"> Male </span>
+								</label>
+								<label class="custom-control custom-radio custom-control-inline">
+								    <input disabled class="custom-control-input" checked="" type="radio" name="gender" value="female">
+								    <span class="custom-control-label"> Female </span>
+								</label>
+								{% endif %}
+							</div>
+							<div id="country" class="form-group col-md-6">
+					  			<label>Country</label>
+					  			<select disabled class="form-control" name = "country">
+									{% for item in country %}
+										{% if cus.country == item %}
+											<option value = "{{ item }}" selected="">{{ item }}</option>
+										{% else %}
+											<option value = "{{ item }}">{{ item }}</option>
+										{% endif %}
+									{% endfor %}
+					  			</select>
+							</div> <!-- form-group end.// -->
+							<button onclick="document.getElementById('type').value = 'edit'" type="submit">Edit</button>
+						{% else %}
+							<input name="first_name" value="{{ request.user.first_name }}">
+							<input name="last_name" value="{{ request.user.last_name }}">
+							<input disabled name="city" value="{{ cus.city }}">
+							<input disabled name="gender" value="{{ cus.gender }}">
+							<input disabled name="country" value="{{ cus.country }}">
+							<button onclick="document.getElementById('type').value = 'save'" type="submit">Save</button>
+						{% endif %}
+						<input hidden id="type" name="type" value="">
+					</form>
 				</div>
 			</div> <!-- row.// -->
 		</div> <!-- card-body .// -->
@@ -92,5 +137,9 @@
 
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-
+<script>
+if ( window.history.replaceState ) {
+  window.history.replaceState( null, null, window.location.href );
+}
+</script>
 {% endblock %}

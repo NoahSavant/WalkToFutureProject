@@ -61,8 +61,10 @@ def product_detail(request, slug):
         'first':size_quantity[0],
         'feedbacks': feedbacks,
     })
+
 def register_successfully(request):
     return render(request,'store/RegisterSuccessfully.html')
+
 def register(request):
     # don't allow user to go back register page when already login
     if request.user.is_authenticated:
@@ -74,7 +76,6 @@ def register(request):
         if User.objects.filter(email=request.POST.get('email')).exists() or User.objects.filter(username=request.POST.get('username')).exists() :
             exists = True
         if form.is_valid() and not exists:
-
             a = []
             for i in range(4):
                 a.append(str(random.randint(0,9)))
@@ -106,8 +107,6 @@ def register(request):
             request.session['pin'] = pin
             request.session['emailUser']= emailUser
             request.session['username']=  request.POST.get('username')
-
-          
 
             return redirect('verify')
     context = {'form':form,
@@ -306,7 +305,6 @@ def order_complete(request):
         'info': info
     })
 
-
 def verify(request):
     error = False
     count = 0
@@ -348,7 +346,6 @@ def verify(request):
         'count':count
         })
 
-
 def contact(request):
     success = False
     if request.method == 'POST':
@@ -371,5 +368,22 @@ def contact(request):
 
     return render(request,'store/contact.html',{'success':success})
 
+@login_required(login_url='login')
 def profile(request):
-    return render(request,'store/profile.html')
+    edit = False
+    if request.method == 'POST':
+        type = request.POST.get('type')
+        if type == 'edit':
+            edit = True
+        else:
+            first = request.POST.get('first_name')
+            last = request.POST.get('last_name')
+            edit = False
+    cus = models.Customer.objects.get(user=request.user)
+    country = ['Việt Nam', 'United States', 'Russia']
+    return render(request,'store/profile.html', {
+        'cus': cus,
+        'country': country,
+        'edit': edit
+    })
+

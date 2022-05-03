@@ -70,10 +70,15 @@
 			    <div class="form-group">
 			        <button type="submit" class="btn btn-primary btn-block"> Register  </button>
 			    </div> <!-- form-group// -->      
-			        
+			    
 			</form>
 		  	{% if form.errors %}
-    			<p class="errorlist">Username or password not correct!!</p>
+				{% if exist == false %}
+    				<p class="errorlist">Username or password not correct!!</p>
+				{% endif %}
+			{% endif %}
+			{% if exist %}
+				<p class="errorlist">Username or email is already exist!!</p>
 			{% endif %}
 		</article><!-- card-body.// -->
     </div> <!-- card .// -->

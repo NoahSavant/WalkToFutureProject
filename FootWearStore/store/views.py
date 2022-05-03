@@ -1,7 +1,11 @@
+from email import message
+from tkinter import messagebox
+from xmlrpc.client import DateTime
 from django.core.mail import EmailMessage
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from numpy import size
+from zmq import Message
 from . import models
 from .models import Customer
 from django.contrib.auth.forms import UserCreationForm
@@ -12,6 +16,8 @@ from datetime import datetime
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.conf import settings
+import random
+from django.contrib.auth.models import User
 # Create your views here.
 
 
@@ -62,13 +68,23 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('index')
     form = RegisterForm()
+    exists = False
     if request.method == "POST":
         form = RegisterForm(request.POST)
-        if form.is_valid():
+        if User.objects.filter(email=request.POST.get('email')).exists() or User.objects.filter(username=request.POST.get('username')).exists() :
+            exists = True
+        if form.is_valid() and not exists:
+
+            a = []
+            for i in range(4):
+                a.append(str(random.randint(0,9)))
+
+            pin = ''.join(a)
+
             emailUser = request.POST.get('email')
             first_nameUser = request.POST.get('first_name')
-            subject = 'REGISTER SUCCESSFULLY'
-            body = render_to_string('store/RegisterSuccessfully.html')
+            subject = 'This is your confirm PIN'
+            body = 'Your verification code is: '+ pin
             from_email = settings.EMAIL_HOST_USER
             to_list = [emailUser]
             email = EmailMessage(
@@ -78,8 +94,8 @@ def register(request):
                 to_list
             )
             email.fail_silently=False
-            email.content_subtype='html'
             email.send()
+           
             form.save()
             list = Customer.objects.all()
             customer = list[len(list)-1]
@@ -87,8 +103,15 @@ def register(request):
             customer.city = request.POST['city']
             customer.country = request.POST['country']
             customer.save()
-            return redirect('register_successfully')
-    context = {'form':form}
+            request.session['pin'] = pin
+            request.session['emailUser']= emailUser
+            request.session['username']=  request.POST.get('username')
+
+          
+
+            return redirect('verify')
+    context = {'form':form,
+              'exist':exists}
     return render(request,'store/register.html',context)
 
 def login(request):
@@ -239,6 +262,7 @@ def place_order(request):
         if request.method == "POST":
             request.session['phone'] = request.POST.get('phone')
             request.session['address'] = request.POST.get('address')
+
             return redirect("order_complete")
         list = models.Cart.objects.filter(user= request.user)
         total = 0
@@ -256,18 +280,96 @@ def order_complete(request):
     info['order'] = request.user.id
     info['date'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     orders = models.Cart.objects.filter(user=request.user)
+    odersNew = orders
     total = 0
+    time =  datetime.now()
     for order in orders:
         total = total + order.total
+        bill = models.Bill()
+        bill.sq = order.sq
+        bill.user = request.user
+        bill.checkout_date = time
+        bill.quantity = order.quantity
+        bill.save()
+        sq = models.Size_Quantity.objects.get(product=order.sq.product, size = order.sq.size)
+        sq.quantity = sq.quantity - order.quantity
+        sq.save() 
+        order.delete()
+
 
     return render(request,'store/order_complete.html', {
         'phone': phone,
         'address': address,
         'customer': customer,
-        'orders': orders,
+        'orders': odersNew,
         'total': total,
         'info': info
     })
 
+
+def verify(request):
+    error = False
+    count = 0
+    if request.method == 'POST':
+        try :
+            count = int(request.POST.get('count'))
+        except TypeError:
+            print("typeError")
+            return render(request,'store/verify.html',
+            {
+                'error':error,
+                'count':count
+            })
+        pin = request.POST.get('pin')
+        if pin == request.session['pin']:
+            subject = 'REGISTER SUCCESSFULLY'
+            body = render_to_string('store/RegisterSuccessfully.html')
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [request.session["emailUser"]]
+            email = EmailMessage(
+                subject,
+                body,
+                from_email,
+                to_list
+            )
+            email.fail_silently=False
+            email.content_subtype = 'html'
+            email.send()
+            return render(request,'store/RegisterSuccessfully.html')
+        else:
+            count = count + 1
+            error = True
+            if count == 4:
+                user = User.objects.get(username = request.session['username'])
+                user.delete()
+                return redirect('register')
+    return render(request,'store/verify.html',{
+        'error':error,
+        'count':count
+        })
+
+
 def contact(request):
-    return render(request,'store/contact.html')
+    success = False
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        
+        subject = request.POST.get('subject')
+        body = 'From email: '+ email + '\nName: '+ name+ '\nMessage: ' + request.POST.get('message')
+        from_email = settings.EMAIL_HOST_USER
+        to_list = ['walktofuturecontact@gmail.com']
+        email = EmailMessage(
+            subject,
+            body,
+            from_email,
+            to_list
+        )
+        email.fail_silently=False
+        email.send()
+        success = True
+
+    return render(request,'store/contact.html',{'success':success})
+
+def profile(request):
+    return render(request,'store/profile.html')

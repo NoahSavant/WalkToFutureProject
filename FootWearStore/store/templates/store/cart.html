@@ -73,7 +73,7 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Total price:</dt>
-			  <dd class="text-right">${{ total }}</dd>
+			  <dd class="text-right">${{ total|floatformat:2 }}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Tax:</dt>
@@ -81,13 +81,18 @@
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Total:</dt>
-			  <dd class="text-right text-dark b"><strong>${{ total }}</strong></dd>
+			  <dd class="text-right text-dark b"><strong>${{ total|floatformat:2 }}</strong></dd>
 			</dl>
 			<hr>
 			<p class="text-center mb-3">
 				<img src="{% static 'store/images/misc/payments.png' %}" height="26">
 			</p>
-			<a href="{% url 'place_order' %}" class="btn btn-primary btn-block"> Checkout </a>
+			{% if orders|length == 0 %}
+				<a class="btn btn-primary btn-block" onclick="alert(' You do not have any orders ');" > Checkout  </a>
+				 
+			{% else %}
+				<a  href="{% url 'place_order' %}" class="btn btn-primary btn-block"> Checkout </a>
+			{% endif %}
 			<a href="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='[0,10000]' %}" class="btn btn-light btn-block">Continue Shopping</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->

@@ -88,3 +88,16 @@ class Feedback(models.Model):
 
     def __str__(self):
         return str(self.product) + " - " + str(self.user)
+
+class Bill(models.Model):
+    user =  models.ForeignKey(User, on_delete=models.CASCADE)
+    sq = models.ForeignKey(Size_Quantity,on_delete=models.CASCADE)
+    checkout_date = models.DateTimeField()
+    quantity = models.IntegerField(default=1)
+    
+    @property
+    def total(self):
+        return self.sq.product.price * self.quantity
+
+    def __str__(self):
+        return self.user.username +"|"+ self.checkout_date.strftime("%m/%d/%Y, %H:%M:%S")

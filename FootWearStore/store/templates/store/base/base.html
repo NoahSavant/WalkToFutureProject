@@ -111,10 +111,12 @@ $(document).ready(function() {
 					<div class="widget-header">
 						{% if request.user.is_authenticated %}
 						<div class="icontext w-100">
-							<img
+							<a href="{%url 'profile' %}" class="brand-wrap">
+								<img
 								src="{% static 'store/images/avatars/default_avatar.jpg' %}"
 								class="img-xs icon rounded-circle"
-            				/>
+            					/>
+							</a>
 							<small class="title text-muted">Welcome <br>{{ request.user.first_name }} {{ request.user.last_name }} !</small>
 						</div>
 						<span class="" >
@@ -198,6 +200,17 @@ $(document).ready(function() {
 {% block contact %}
 {% endblock %}
 <!-- end contact.html -->
+
+<!-- verify.html -->
+{% block verify %}
+{% endblock %}
+<!-- end verify.html -->
+
+<!-- profile.html -->
+{% block profile %}
+{% endblock %}
+<!-- end profile.html -->
+
 
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer border-top">

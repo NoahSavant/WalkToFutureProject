@@ -34,6 +34,7 @@
                                     <li>{{ request.user.first_name }} {{ request.user.last_name }}</li>
                                     <li>{{ customer.city }}</li>
                                     <li>{{ customer.country }}</li>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -45,6 +46,8 @@
                                     <ul class="list-unstyled mb0">
                                         <li><strong>Order: </strong>{{ info.order }}</li>
                                         <li><strong>Order Date: </strong>{{ info.date }}</li>
+                                        <li><strong>Phone: </strong>{{phone}}</li>
+                                        <li><strong>Address: </strong>{{address}}</li>
                                         <li><strong>Status: </strong>PAID</li>
                                     </ul>
                                 </div>
@@ -65,14 +68,14 @@
                                             <tr>
                                                 <td>{{ order.sq.product.name }}</td>
                                                 <td class="text-center">{{ order.quantity }}</td>
-                                                <td class="text-center">${{ order.sq.product.price }} USD</td>
+                                                <td class="text-center">${{ order.total|floatformat:2 }} USD</td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">${{ total }} USD</th>
+                                                <th class="text-center">${{ total|floatformat:2 }} USD</th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Tax:</th>
@@ -81,7 +84,7 @@
                                             
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">${{ total }} USD</th>
+                                                <th class="text-center">${{ total|floatformat:2 }} USD</th>
                                             </tr>
                                         </tfoot>
                                     </table>

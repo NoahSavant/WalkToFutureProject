@@ -35,7 +35,7 @@
 <article class="card mb-4">
 <div class="card-body">
 	<h4 class="card-title mb-4">Contact info</h4>
-	<form id="contact" method="POST" action="">
+	<form  method="POST" action="">
 		{% csrf_token %}
 		<div class="row">
 			<div class="form-group col-sm-6">
@@ -46,6 +46,8 @@
 				<label>Address</label>
 				<input type="text" required name="address" class="form-control">
 			</div>
+
+			<button  type ="submit" hidden id="contact" ></button>
 		</div> <!-- row.// -->
 	</form>
 </div> <!-- card-body.// -->
@@ -102,7 +104,7 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Total price:</dt>
-			  <dd class="text-right">${{ total }}</dd>
+			  <dd class="text-right">${{ total|floatformat:2 }}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Tax:</dt>
@@ -110,13 +112,14 @@
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Total:</dt>
-			  <dd class="text-right text-dark b"><strong>${{ total }}</strong></dd>
+			  <dd class="text-right text-dark b"><strong>${{ total|floatformat:2 }}</strong></dd>
 			</dl>
 			<hr>
 			<p class="text-center mb-3">
 				<img src="{% static 'store/images/misc/payments.png' %}" height="26">
 			</p>
-			<a onclick="document.getElementById('contact').submit()" class="btn btn-primary btn-block"> Place Order </a>
+			<a  onclick="document.getElementById('contact').click()" class="btn btn-primary btn-block"> Place Order </a>
+
 			
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->

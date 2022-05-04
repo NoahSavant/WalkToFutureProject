@@ -390,6 +390,7 @@ def profile(request):
     date = []
     list = []
     bill = []
+    total = 0
     for item in bills:
         if item.checkout_date not in date:
             if len(bill) != 0:

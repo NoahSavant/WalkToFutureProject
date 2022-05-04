@@ -100,4 +100,4 @@ class Bill(models.Model):
         return self.sq.product.price * self.quantity
 
     def __str__(self):
-        return self.user.username +"|"+ self.checkout_date.strftime("%m/%d/%Y, %H:%M:%S")
+        return self.user.username +" | "+ self.checkout_date.strftime("%m/%d/%Y, %H:%M:%S")

@@ -32,7 +32,7 @@
 	{% for pro in products %}
 	<div class="col-md-3">
 		<div class="card card-product-grid">
-			<a href="{% url 'detail' pro.slug %}" class="img-wrap"> <img src={{ pro.image.url }}> </a>
+			<a href="{% url 'detail' pro.slug %}" class="img-wrap" > <img id="index_img" src={{ pro.image.url }}> </a>
 			<figcaption class="info-wrap">
 				<a href="{% url 'detail' pro.slug %}" class="title">{{ pro.name }}</a>
 				<div class="price mt-1">${{ pro.price }}</div> <!-- price-wrap.// -->

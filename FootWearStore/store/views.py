@@ -371,19 +371,43 @@ def contact(request):
 @login_required(login_url='login')
 def profile(request):
     edit = False
+    cus = models.Customer.objects.get(user=request.user)
     if request.method == 'POST':
         type = request.POST.get('type')
         if type == 'edit':
             edit = True
         else:
-            first = request.POST.get('first_name')
-            last = request.POST.get('last_name')
+            request.user.first_name = request.POST.get('first_name')
+            request.user.last_name = request.POST.get('last_name')
+            request.user.save()
+            cus.city = request.POST.get('city')
+            cus.country = request.POST.get('country')
+            cus.gender = request.POST.get('gender')
+            cus.save()
             edit = False
-    cus = models.Customer.objects.get(user=request.user)
     country = ['Việt Nam', 'United States', 'Russia']
+    bills = models.Bill.objects.filter(user=request.user)
+    date = []
+    list = []
+    bill = []
+    for item in bills:
+        if item.checkout_date not in date:
+            if len(bill) != 0:
+                list.append({'bills': bill,'total': total})
+            date.append(item.checkout_date)
+            bill = [item]
+            total = item.total
+        else:
+            bill.append(item)
+            total = total + item.total
+
+    list.append({'bills': bill,'total': total})
+    list = list[::-1]
+    list = list[:3]
     return render(request,'store/profile.html', {
         'cus': cus,
         'country': country,
-        'edit': edit
+        'edit': edit,
+        'list': list
     })
 

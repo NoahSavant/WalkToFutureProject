@@ -84,6 +84,7 @@ a:hover {
   width: 40px;
   height: 40px;
 }
+
 #avatar {
     width: 100px;
     height: 100px;
@@ -153,6 +154,56 @@ a:hover {
   background: linear-gradient(to bottom right, #3167eb, #3167eb);
   /* Standard syntax */
   transition: 0.5s;
+}
+
+#header_user {
+    background-color: #3167EB;
+    color: #fff;
+}
+
+#header_bill {
+    background-color: #3167EB;
+    color: #fff;
+}
+
+#date_label {
+    margin-left: 10px;
+}
+
+#total_label {
+    margin-left: 10px;
+}
+
+
+#bill_item_img {
+    max-width:70px;
+    max-height:70px;
+    width: auto;
+    height: auto;
+}
+
+#main_img{
+    max-width:100%;
+    max-height:100%;
+    object-fit: contain;
+}
+
+#index_img{
+    max-width:100%;
+    max-height:100%;
+    object-fit: contain;
+}
+
+#detail_img{
+    max-width:100%;
+    max-height:100%;
+    object-fit: contain;
+}
+
+#place_order_img{
+    max-width:100%;
+    max-height:100%;
+    object-fit: contain;
 }
 
 .hover-zoom:hover {

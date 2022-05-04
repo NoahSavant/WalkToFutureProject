@@ -20,9 +20,9 @@
 	</aside>
 	<main class="col-md-9">
 		<article class="card">
-		<header class="card-header">
-			<strong class="d-inline-block mr-3">user id: {{request.user.id}}</strong>
-			<strong class="d-inline-block mr-3">username: {{request.user.username}}</strong>
+		<header class="card-header" id="header_user">
+			<strong class="d-inline-block mr-3 ">USERID: {{request.user.id}}</strong>
+			<strong class="d-inline-block mr-3 ">USERNAME: {{request.user.username}}</strong>
 		</header>
 		<div class="card-body">
 			<div class="row"> 
@@ -33,7 +33,7 @@
 						class="img-xs rounded-circle"
 						id="avatar"
 						/>
-						<label class="title text-muted"><br>{{ request.user.first_name }} {{ request.user.last_name }} !</label>
+						<label><strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></label>
 					</div>
 				</div>
 				<div class="col-md-8">
@@ -42,92 +42,146 @@
 					<form method="POST" action="">
 						{% csrf_token %}
 						{% if not edit %}
-							<input disabled name="first_name" value="{{ request.user.first_name }}">
-							<input disabled name="last_name" value="{{ request.user.last_name }}">
-							<input disabled name="city" value="{{ cus.city }}">
-							<div id="gender" class="form-group">
-								{% if cus.gender == 'male' %}
-								<label class="custom-control custom-radio custom-control-inline">
-								    <input disabled class="custom-control-input" checked="" type="radio" name="gender" value="male">
-								    <span class="custom-control-label"> Male </span>
-								</label>
-								<label class="custom-control custom-radio custom-control-inline">
-								    <input disabled class="custom-control-input" type="radio" name="gender" value="female">
-								    <span class="custom-control-label"> Female </span>
-								</label>
-								{% else %}
-								<label class="custom-control custom-radio custom-control-inline">
-								    <input disabled class="custom-control-input" type="radio" name="gender" value="male">
-								    <span class="custom-control-label"> Male </span>
-								</label>
-								<label class="custom-control custom-radio custom-control-inline">
-								    <input disabled class="custom-control-input" checked="" type="radio" name="gender" value="female">
-								    <span class="custom-control-label"> Female </span>
-								</label>
-								{% endif %}
-							</div>
-							<div id="country" class="form-group col-md-6">
-					  			<label>Country</label>
-					  			<select disabled class="form-control" name = "country">
-									{% for item in country %}
-										{% if cus.country == item %}
-											<option value = "{{ item }}" selected="">{{ item }}</option>
-										{% else %}
-											<option value = "{{ item }}">{{ item }}</option>
-										{% endif %}
-									{% endfor %}
-					  			</select>
-							</div> <!-- form-group end.// -->
-							<button onclick="document.getElementById('type').value = 'edit'" type="submit">Edit</button>
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  <label>First Name</label>
+								  <input type="text" class="form-control" disabled name="first_name" value="{{ request.user.first_name }}">
+								</div>
+								<div class="form-group col-md-6">
+								  <label>Last Name</label>
+								  <input type="text" class="form-control" disabled name="last_name" value="{{ request.user.last_name }}">
+								</div>
+							</div> <!-- form-row.// -->
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  	<label>City</label>
+								  	<input type="text" class="form-control" disabled name="city" value="{{ cus.city }}">
+								</div>
+								<div class="form-group col-md-6">
+									<label>Country</label>
+									<select disabled class="form-control" name = "country">
+										{% for item in country %}
+											{% if cus.country == item %}
+												<option value = "{{ item }}" selected="">{{ item }}</option>
+											{% else %}
+												<option value = "{{ item }}">{{ item }}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+								</div> <!-- form-group end.// -->
+							</div> <!-- form-row.// -->
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label>Gender</label>
+									<br><span>&emsp;</span>
+									{% if cus.gender == 'male' %}
+									<label class="custom-control custom-radio custom-control-inline">
+										<input disabled class="custom-control-input" checked="" type="radio" name="gender" value="male">
+										<span class="custom-control-label"> Male </span>
+									</label>
+									<label class="custom-control custom-radio custom-control-inline">
+										<input disabled class="custom-control-input" type="radio" name="gender" value="female">
+										<span class="custom-control-label"> Female </span>
+									</label>
+									{% else %}
+									<label class="custom-control custom-radio custom-control-inline">
+										<input disabled class="custom-control-input" type="radio" name="gender" value="male">
+										<span class="custom-control-label"> Male </span>
+									</label>
+									<label class="custom-control custom-radio custom-control-inline">
+										<input disabled class="custom-control-input" checked="" type="radio" name="gender" value="female">
+										<span class="custom-control-label"> Female </span>
+									</label>
+									{% endif %}
+								</div>
+								<button onclick="document.getElementById('type').value = 'edit'" type="submit" class="btn btn-outline-primary">Edit</button>
+							</div> <!-- form-row.// -->
 						{% else %}
-							<input name="first_name" value="{{ request.user.first_name }}">
-							<input name="last_name" value="{{ request.user.last_name }}">
-							<input disabled name="city" value="{{ cus.city }}">
-							<input disabled name="gender" value="{{ cus.gender }}">
-							<input disabled name="country" value="{{ cus.country }}">
-							<button onclick="document.getElementById('type').value = 'save'" type="submit">Save</button>
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  <label>First Name</label>
+								  <input type="text" class="form-control" name="first_name" value="{{ request.user.first_name }}">
+								</div>
+								<div class="form-group col-md-6">
+								  <label>Last Name</label>
+								  <input type="text" class="form-control" name="last_name" value="{{ request.user.last_name }}">
+								</div>
+							</div> <!-- form-row.// -->
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  	<label>City</label>
+								  	<input type="text" class="form-control" name="city" value="{{ cus.city }}">
+								</div>
+								<div class="form-group col-md-6">
+									<label>Country</label>
+									<select class="form-control" name = "country">
+										{% for item in country %}
+											{% if cus.country == item %}
+												<option value = "{{ item }}" selected="">{{ item }}</option>
+											{% else %}
+												<option value = "{{ item }}">{{ item }}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+								</div> <!-- form-group end.// -->
+							</div> <!-- form-row.// -->
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label>Gender</label>
+									<br><span>&emsp;</span>
+									{% if cus.gender == 'male' %}
+									<label class="custom-control custom-radio custom-control-inline">
+										<input class="custom-control-input" checked="" type="radio" name="gender" value="male">
+										<span class="custom-control-label"> Male </span>
+									</label>
+									<label class="custom-control custom-radio custom-control-inline">
+										<input class="custom-control-input" type="radio" name="gender" value="female">
+										<span class="custom-control-label"> Female </span>
+									</label>
+									{% else %}
+									<label class="custom-control custom-radio custom-control-inline">
+										<input class="custom-control-input" type="radio" name="gender" value="male">
+										<span class="custom-control-label"> Male </span>
+									</label>
+									<label class="custom-control custom-radio custom-control-inline">
+										<input class="custom-control-input" checked="" type="radio" name="gender" value="female">
+										<span class="custom-control-label"> Female </span>
+									</label>
+									{% endif %}
+								</div>
+								<button onclick="document.getElementById('type').value = 'save'" type="submit" class="btn btn-outline-primary">Save</button>
+							</div> <!-- form-row.// -->
 						{% endif %}
 						<input hidden id="type" name="type" value="">
 					</form>
 				</div>
 			</div> <!-- row.// -->
 		</div> <!-- card-body .// -->
+		<header class="card-header" id="header_bill">
+			<strong class="d-inline-block mr-3 ">TOP 3 RECENTS ORDER  </strong>
+		</header><br>
 		<div class="table-responsive">
+		{% for item in list %}
 		<table class="table table-hover">
+			<label id="date_label"><strong>{{ item.bills.0.checkout_date }}</strong></label>
+			{% for bill in item.bills %}
 			<tr>
-				<td width="65">
-					<img src="../images/items/1.jpg" class="img-xs border">
+				<td width="100">
+					<img src="{{ bill.sq.product.image.url }}" class="border" id="bill_item_img">
 				</td>
 				<td> 
-					<p class="title mb-0">Product name goes here </p>
-					<var class="price text-muted">USD 145</var>
+					<p class="title mb-0">{{ bill.sq.product.name }}</p>
+					<small class="title text-muted">$ {{ bill.sq.product.price }}</small><br>
+					<p class="price text-muted">$ {{ bill.total }}</p>
 				</td>
-				<td> Seller <br> Nike clothing </td>
-				<td width="250"> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
+				<td width="200">Quantity: {{ bill.quantity }} <br>Size: {{ bill.sq.size }} <br>Brand: {{ bill.sq.product.brand }} </td>
+				<td width="200"><a href="{% url 'detail' bill.sq.product.slug %}" class="btn btn-outline-primary">Detail</a></td>
 			</tr>
-			<tr>
-				<td>
-					<img src="../images/items/2.jpg" class="img-xs border">
-				</td>
-				<td> 
-					<p class="title mb-0">Another name goes here </p>
-					<var class="price text-muted">USD 15</var>
-				</td>
-				<td> Seller <br> ABC shop </td>
-				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
-			</tr>
-			<tr>
-				<td>
-					<img src="../images/items/3.jpg" class="img-xs border">
-				</td>
-				<td> 
-					<p class="title mb-0">The name of the product  goes here </p>
-					<var class="price text-muted">USD 145</var>
-				</td>
-				<td> Seller <br> Wallmart </td>
-				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
-			</tr>
+			{% endfor %}
+
 		</table>
+			<p id="total_label"><strong>Total: </strong>$ {{ item.total|floatformat:2 }}</p>
+		{% endfor %}
 		</div> <!-- table-responsive .end// -->
 		</article> <!-- order-group.// --> 
 	</main>

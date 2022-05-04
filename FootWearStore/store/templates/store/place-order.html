@@ -19,7 +19,7 @@
 		{% for item in list %}
 		<div class="col-md-6">
 			<figure class="itemside  mb-4">
-				<div class="aside"><img src="{{ item.sq.product.image.url }}" class="border img-sm"></div>
+				<div class="aside"><img id="place_order_img" src="{{ item.sq.product.image.url }}" class="border img-sm"></div>
 				<figcaption class="info">
 					<p>{{ item.sq.product.name }}</p>
 					<span class="text-muted">{{ item.quantity }}x{{ item.sq.product.price }} = {{ item.total }} </span>

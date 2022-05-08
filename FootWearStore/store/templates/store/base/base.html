@@ -92,9 +92,9 @@ $(document).ready(function() {
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
-	<a href="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' %}" class="btn btn-outline-primary">Store</a>
+	<a href="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='All'  %}" class="btn btn-outline-primary">Store</a>
 	<div class="col-lg  col-md-6 col-sm-12 col">
-		<form method="POST" action="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' %}" class="search">
+		<form id ="formSearch" method="POST" action="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='All'  %}" class="search">
 			{% csrf_token %}
 			<div class="input-group w-100">
 				<div class="category-wrap dropdown">
@@ -105,7 +105,7 @@ $(document).ready(function() {
 						{% endfor %}
 					</div>
 				</div>  <!-- category-wrap.// -->
-			    <input id="search" name="search" type="text" class="form-control" oninput="loadItem()" data-toggle="dropdown" style="width:60%;" placeholder="Search">
+			    <input  id="search" name="search" type="text" class="form-control" oninput="loadItem()" data-toggle="dropdown" style="width:60%;" placeholder="Search">
 			    <div class="input-group-append">
 			      <button class="btn btn-primary" type="submit">
 			        <i class="fa fa-search"></i>
@@ -262,6 +262,9 @@ function loadItem() {
       item[i].style.display = "";
     }
   }
+  alert(filter);
+  document.getElementById("formSearch").action =  "{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='" + filter + "' %}";
+  
 }
 </script>
 </body>

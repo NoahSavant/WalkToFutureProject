@@ -31,9 +31,9 @@
 				<ul class="list-menu">
 				{% for item in brand %}
 					{% if item == listBrandCategory %}
-						<li  class = "active page-item" ><a class ="page-link" href="{% url 'store' brandCategory=item sizeCategory='All' priceCategory='All' %}">{{item}}  </a></li>
+						<li  class = "active page-item" ><a class ="page-link" href="{% url 'store' brandCategory=item sizeCategory='All' priceCategory='All'   searchCategory='All' %}">{{item}}  </a></li>
 					{%else%}
-						<li class = "page-item"><a class ="page-link" href="{% url 'store' brandCategory=item sizeCategory='All' priceCategory='All'  %}">{{item}}  </a></li>
+						<li class = "page-item"><a class ="page-link" href="{% url 'store' brandCategory=item sizeCategory='All' priceCategory='All'   searchCategory='All' %}">{{item}}  </a></li>
 					{% endif %}
 				{% endfor %}
 				</ul>
@@ -152,19 +152,19 @@
   <ul class="pagination">
 
 	{% if page.has_previous%}
-    <li class="page-item"><a class="page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory %}?page={{page.previous_page_number}}">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory searchCategory=search %}?page={{page.previous_page_number}}">Previous</a></li>
 	{% endif %}
 
 	{% for pages in page.paginator.page_range %}
 		{% if page.number == pages  %}
-			<li class="active page-item"><a class = "page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory %}?page={{pages }}">{{pages}}</a></li>
+			<li class="active page-item"><a class = "page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory searchCategory=search %}?page={{pages }}">{{pages}}</a></li>
 		{% elif pages > page.number|add:'-3' and pages < page.number|add:'3' %}
-			<li class="page-item"><a class = "page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory%}?page={{pages }}">{{pages}}</a></li>
+			<li class="page-item"><a class = "page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory searchCategory=search %}?page={{pages }}">{{pages}}</a></li>
 		{% endif %}
 	{% endfor %}
 
 	{% if page.has_next%}
-    <li class="page-item"><a class="page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory %}?page={{page.next_page_number}}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="{%url 'store' brandCategory=listBrandCategory sizeCategory=listSizeCategory priceCategory=listPriceCategory searchCategory=search %}?page={{page.next_page_number}}">Next</a></li>
 	{% endif %}
 	
   </ul>

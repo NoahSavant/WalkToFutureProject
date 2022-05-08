@@ -14,3 +14,8 @@ def countCart(request):
             for order in orders:
                 total = total + order.quantity
     return total
+
+@register.simple_tag
+def product():
+    products = models.Product.objects.all()
+    return products

@@ -94,9 +94,18 @@ $(document).ready(function() {
 	</div> <!-- col.// -->
 	<a href="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' %}" class="btn btn-outline-primary">Store</a>
 	<div class="col-lg  col-md-6 col-sm-12 col">
-		<form action="#" class="search">
+		<form method="POST" action="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' %}" class="search">
+			{% csrf_token %}
 			<div class="input-group w-100">
-			    <input type="text" class="form-control" style="width:60%;" placeholder="Search">
+				<div class="category-wrap dropdown">
+					<div style="display:none" id="drop" class="dropdown-menu">
+						{% product as list %}
+						{% for pro in list %}
+							<a class="dropdown-item" href="{% url 'detail' pro.slug %}">{{ pro.name }}</a>
+						{% endfor %}
+					</div>
+				</div>  <!-- category-wrap.// -->
+			    <input id="search" name="search" type="text" class="form-control" oninput="loadItem()" data-toggle="dropdown" style="width:60%;" placeholder="Search">
 			    <div class="input-group-append">
 			      <button class="btn btn-primary" type="submit">
 			        <i class="fa fa-search"></i>
@@ -232,6 +241,28 @@ $(document).ready(function() {
 	</div><!-- //container -->
 </footer>
 <!-- ========================= FOOTER END // ========================= -->
-
+<script>
+function loadItem() {
+  // Declare variables
+  var input, filter, div, item, a, i, txtValue;
+  input = document.getElementById('search');
+  filter = input.value.toUpperCase();
+  div = document.getElementById("drop");
+  item = div.getElementsByTagName('a');
+  div.style.display = "";
+  if (filter == "") {
+  		div.style.display = "none";
+  }
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < item.length; i++) {
+    txtValue = item[i].textContent || item[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) < 0 || filter == "") {
+      item[i].style.display = "none";
+    } else {
+      item[i].style.display = "";
+    }
+  }
+}
+</script>
 </body>
 </html>

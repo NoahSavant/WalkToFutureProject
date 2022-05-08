@@ -174,6 +174,7 @@ def getNumber(str):
     return int(emp_lis)
 
 def store(request, brandCategory, sizeCategory, priceCategory):
+    flag = True
     if sizeCategory == "All" or sizeCategory == '[]':       
         sizeCategory = []
     if priceCategory == "All":
@@ -204,19 +205,27 @@ def store(request, brandCategory, sizeCategory, priceCategory):
     if request.method=="POST":
         sizeCategory = request.POST.getlist('sizeCategory')
         min = request.POST.get('min')
-        max = request.POST.get('max')
-        priceCategory = [min,max]
+        if min == None:
+            search = request.POST.get("search")
+            list = models.Product.objects.filter(name__contains=search)
+            priceCategory = ['0','10000']
+            flag = False
+        else:
+            max = request.POST.get('max')
+            priceCategory = [min,max]
+
     # filter by size
     if len(sizeCategory) > 0:
         list = []
         for item in sizeQuantity:
             if str(item.size) in sizeCategory and item.product not in list and item.product in _list:   
                 list.append(item.product)
-    else:
+    elif flag:
         list = _list
     #end filter by size
-
+    print("cccccccccccccccccccccccccccccc", list)
     #filter by price
+    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",priceCategory)
     _min = getNumber(str(priceCategory).split(',')[0])
     _max = getNumber(str(priceCategory).split(',')[1])
     priceCategory = [str(_min),str(_max)]
@@ -230,7 +239,7 @@ def store(request, brandCategory, sizeCategory, priceCategory):
 
     # sort size   
     size.sort()
-
+    print("bbbbbbbbbbbbbbbbbbb",list)
     # page paginator
     product_paginator = Paginator(list,1)
     page_num = request.GET.get('page')

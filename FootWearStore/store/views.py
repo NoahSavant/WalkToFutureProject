@@ -220,7 +220,8 @@ def store(request, brandCategory, sizeCategory, priceCategory,searchCategory):
     #end filter by size
 
     #filter by price
-
+    if priceCategory == [None, None]:
+        priceCategory = ['0', '10000']
     _min = getNumber(str(priceCategory).split(',')[0])
     _max = getNumber(str(priceCategory).split(',')[1])
     priceCategory = [str(_min),str(_max)]
@@ -235,6 +236,12 @@ def store(request, brandCategory, sizeCategory, priceCategory,searchCategory):
     # sort size   
     size.sort()
 
+    if request.method == 'POST':
+        flag = request.POST.get('flag')
+        if flag == 'true':
+            searchCategory = request.POST.get('search')
+            list = models.Product.objects.filter(name__contains=searchCategory)
+
     # page paginator
     product_paginator = Paginator(list,1)
     page_num = request.GET.get('page')
@@ -244,7 +251,8 @@ def store(request, brandCategory, sizeCategory, priceCategory,searchCategory):
 
     listMin = ['0','50','70','100','200','500','1000']
     listMax = ['50','70','100','200','500','1000','10000']
-
+    if searchCategory == "":
+        searchCategory = 'All'
     context = {
         'product': products,
         'page':pages,    
@@ -266,7 +274,6 @@ def place_order(request):
         if request.method == "POST":
             request.session['phone'] = request.POST.get('phone')
             request.session['address'] = request.POST.get('address')
-
             return redirect("order_complete")
         list = models.Cart.objects.filter(user= request.user)
         total = 0

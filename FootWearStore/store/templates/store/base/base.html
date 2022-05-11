@@ -94,7 +94,7 @@ $(document).ready(function() {
 	</div> <!-- col.// -->
 	<a href="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='All'  %}" class="btn btn-outline-primary">Store</a>
 	<div class="col-lg  col-md-6 col-sm-12 col">
-		<form id ="formSearch" method="POST" action="{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='All'  %}" class="search">
+		<form id ="formSearch" method="POST" class="search">
 			{% csrf_token %}
 			<div class="input-group w-100">
 				<div class="category-wrap dropdown">
@@ -103,15 +103,17 @@ $(document).ready(function() {
 						{% for pro in list %}
 							<a class="dropdown-item" href="{% url 'detail' pro.slug %}">{{ pro.name }}</a>
 						{% endfor %}
+						<a id="nf" class="dropdown-item">Not Found</a>
 					</div>
 				</div>  <!-- category-wrap.// -->
 			    <input  id="search" name="search" type="text" class="form-control" oninput="loadItem()" data-toggle="dropdown" style="width:60%;" placeholder="Search">
 			    <div class="input-group-append">
-			      <button class="btn btn-primary" type="submit">
+			      <button class="btn btn-primary" onclick="submitSearch()">
 			        <i class="fa fa-search"></i>
 			      </button>
 			    </div>
 		    </div>
+			<input hidden id="flag" name="flag" value="false">
 		</form> <!-- search-wrap .end// -->
 	</div> <!-- col.// -->
 	<div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
@@ -244,7 +246,7 @@ $(document).ready(function() {
 <script>
 function loadItem() {
   // Declare variables
-  var input, filter, div, item, a, i, txtValue;
+  var input, filter, div, item, i, txtValue, notfound=true;
   input = document.getElementById('search');
   filter = input.value.toUpperCase();
   div = document.getElementById("drop");
@@ -254,17 +256,34 @@ function loadItem() {
   		div.style.display = "none";
   }
   // Loop through all list items, and hide those who don't match the search query
-  for (i = 0; i < item.length; i++) {
+  for (i = 0; i < item.length - 1; i++) {
     txtValue = item[i].textContent || item[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) < 0 || filter == "") {
+    if (txtValue.toUpperCase().indexOf(filter) < 0 || filter == "" || i > 9) {
       item[i].style.display = "none";
     } else {
       item[i].style.display = "";
+      notfound = false;
     }
   }
-  alert(filter);
-  document.getElementById("formSearch").action =  "{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='" + filter + "' %}";
-  
+  if(notfound) {
+  		document.getElementById("nf").style.display = "";
+  }
+  else{
+  		document.getElementById("nf").style.display = "none";
+  }
+  document.getElementById('search').click();
+  document.getElementById('search').click();
+}
+</script>
+<script>
+function submitSearch() {
+	var input = document.getElementById('search');
+  	var filter = input.value.toUpperCase();
+  	if(filter != "") {
+  		document.getElementById('flag').value = "true";
+  		document.getElementById('formSearch').action = "{% url 'store' brandCategory='All' sizeCategory='All' priceCategory='All' searchCategory='All'  %}";
+
+  	}
 }
 </script>
 </body>

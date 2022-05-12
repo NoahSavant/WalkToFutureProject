@@ -243,7 +243,7 @@ def store(request, brandCategory, sizeCategory, priceCategory,searchCategory):
             list = models.Product.objects.filter(name__contains=searchCategory)
 
     # page paginator
-    product_paginator = Paginator(list,1)
+    product_paginator = Paginator(list,6)
     page_num = request.GET.get('page')
     
     pages = product_paginator.get_page(page_num)

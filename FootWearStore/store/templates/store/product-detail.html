@@ -135,10 +135,10 @@
                 class="img-xs icon rounded-circle"
               />
               <input type="text" class="form-control" style="width:60%;" placeholder="Comment..." name="comment">
-              <div class="input-group-append">
-			      <button class="btn btn-primary" type="submit" onclick="document.getElementById('sw').value = 'comment'">
-			        <img src="{% static 'store/images/icons/comment.png' %}">
-			      </button>
+              <div class="input-group-append" style="margin-top:20px;">
+                <button class="btn btn-primary" type="submit" onclick="document.getElementById('sw').value = 'comment'">
+                  <img src="{% static 'store/images/icons/comment.png' %}">
+                </button>
               </div>
               <input type="hidden" id="sw" name="sw" value="">
             </div>

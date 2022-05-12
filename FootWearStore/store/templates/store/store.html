@@ -125,14 +125,14 @@
 		<div class="col-md-4">
 			<figure class="card card-product-grid">
 				<div class="img-wrap"> 
-					<img src="{{ pro.image.url }}">
+					<img id="index_img" src="{{ pro.image.url }}">
 					
 				</div> <!-- img-wrap.// -->
 				<figcaption class="info-wrap">
 					<div class="fix-height">
 						<a href="{% url 'detail' pro.slug %}" class="title">{{pro.name}}</a>
 						<div class="price-wrap mt-2">
-							<span class="price">{{pro.price}}</span>
+							<span class="price">$ {{pro.price}}</span>
 						</div> <!-- price-wrap.// -->
 					</div>
 					<a href="{% url 'detail' pro.slug %}" class="btn btn-block btn-primary">Add to cart </a>

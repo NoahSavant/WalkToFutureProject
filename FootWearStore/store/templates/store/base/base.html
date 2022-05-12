@@ -255,12 +255,14 @@ function loadItem() {
   if (filter == "") {
   		div.style.display = "none";
   }
+  var count = 0;
   // Loop through all list items, and hide those who don't match the search query
   for (i = 0; i < item.length - 1; i++) {
     txtValue = item[i].textContent || item[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) < 0 || filter == "" || i > 9) {
+    if (txtValue.toUpperCase().indexOf(filter) < 0 || filter == "" || count > 9) {
       item[i].style.display = "none";
     } else {
+		count = count + 1;
       item[i].style.display = "";
       notfound = false;
     }

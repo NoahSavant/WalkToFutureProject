@@ -468,7 +468,8 @@ def dashboard(request):
         adminState = True
     else:
         bill = models.Bill.objects.filter(user = user)
-        order = models.Bill.objects.filter(user = user).order_by('-checkout_date')[:1]
+        order1 = models.Bill.objects.filter(user = user).order_by('-checkout_date')[0]
+        order =  models.Bill.objects.filter(user = user, checkout_date = order1.checkout_date)
         for b in bill:
             totalProduct = totalProduct + b.quantity
     today = datetime.now()
@@ -554,11 +555,11 @@ def dashboard(request):
 
     #stonk product this week
     if totalSalesLastWeek != 0:
-        thisWeekStonk = totalSalesWeek / totalSalesLastWeek
+        thisWeekStonk = (totalSalesWeek / totalSalesLastWeek)*100
     else:
         thisWeekStonk = 0
 
-    totalSales = totalSalesWeek + totalSalesLastWeek
+    totalSales = totalSalesWeek 
     if thisWeekStonk >= 1 or thisWeekStonk == 0:
         stonkUp = True 
     else:
@@ -606,12 +607,13 @@ def dashboard(request):
                 if b.checkout_date >= datetime(date.today().year-1, i, 1) and b.checkout_date < datetime(date.today().year-1, i+1, 1):
                     lastYear[i-1]+=b.total
 
-
-    totalYearProfit = totalProfitsLastYear + totalProfitsYear
+    print("haaaaaaaaaaaaaaaaa")
+    print(totalProfitsLastYear)
+    totalYearProfit =  totalProfitsYear + totalProfitsLastYear
     #stonk profit this year
 
     if totalProfitsLastYear != 0:
-        thisYearStonk = totalProfitsYear / totalProfitsLastYear
+        thisYearStonk = totalYearProfit / totalProfitsLastYear
     else:
         thisYearStonk = 0
     
@@ -625,7 +627,7 @@ def dashboard(request):
     
     #stonk profit this month
     if totalProfitLastMonth !=0:
-        thisMonthStonk = totalProfitMonth / totalProfitLastMonth
+        thisMonthStonk = (totalProfitMonth / totalProfitLastMonth)*100
     else:
         thisMonthStonk = 0
 

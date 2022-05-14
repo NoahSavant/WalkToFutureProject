@@ -36,7 +36,11 @@
             <div class="card">
               <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Products sold per Days</h3>
+                  {% if adminState %}
+                    <h3 class="card-title">Products sold per Days</h3>
+                  {% else %}
+                    <h3 class="card-title">Products bought</h3>
+                  {% endif %}
                 </div>
               </div>
               <div class="card-body">
@@ -76,48 +80,88 @@
               </div>
             </div>
             <!-- /.card -->
-
-            <div class="card">
-              <div class="card-header border-0">
-                <h3 class="card-title">Top 3 products</h3>
-              
+            {% if adminState %}
+              <div class="card">
+                <div class="card-header border-0">
+                  <h3 class="card-title">Top 3 products</h3>
+                
+                </div>
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-striped table-valign-middle">
+                    <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Sales</th>
+                      <th>More</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for sq in sizeQuantity %}
+                    <tr>
+                      <td>
+                        <img src="{{sq.product.image.url}}" alt="Product 1" class="img-circle img-size-32 mr-2">
+                      {{sq.product.name}}
+                      </td>
+                      <td>${{sq.product.price|floatformat:2}}</td>
+                      <td>
+                        <small class="text-success mr-1">
+                          <i class="fas fa-arrow-up"></i>
+                          {{sq.product.statitic|floatformat:2}} %
+                        </small>
+                        {{sq.product.sold}} Sold
+                      </td>
+                      <td>
+                        <a href="{% url 'detail' sq.product.slug %}" class="text-muted">
+                          <i class="fas fa-search"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle">
-                  <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Sales</th>
-                    <th>More</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for sq in sizeQuantity %}
-                  <tr>
-                    <td>
-                      <img src="{{sq.product.image.url}}" alt="Product 1" class="img-circle img-size-32 mr-2">
-                     {{sq.product.name}}
-                    </td>
-                    <td>${{sq.product.price|floatformat:2}}</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fas fa-arrow-up"></i>
-                        {{sq.product.statitic|floatformat:2}} %
-                      </small>
-                      {{sq.product.sold}} Sold
-                    </td>
-                    <td>
-                      <a href="{% url 'detail' sq.product.slug %}" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
+            {% else %}
+              <div class="card">
+                <div class="card-header border-0">
+                  <h3 class="card-title">Recent order</h3>
+                
+                </div>
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-striped table-valign-middle">
+                    <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Date</th>
+                      <th>More</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in order %}
+                    <tr>
+                      <td>
+                        <img src="{{item.sq.product.image.url}}" alt="Product 1" class="img-circle img-size-32 mr-2">
+                      {{item.sq.product.name}}
+                      </td>
+                      <td>${{item.sq.product.price|floatformat:2}}</td>
+                      <td>
+                        
+                        {{item.checkout_date|date:'Y-m-d H:i'}}
+                      </td>
+                      <td>
+                        <a href="{% url 'detail' item.sq.product.slug %}" class="text-muted">
+                          <i class="fas fa-search"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            {% endif %}
             <!-- /.card -->
           </div>
           <!-- /.col-md-6 -->
@@ -133,7 +177,11 @@
                 <div class="d-flex">
                   <p class="d-flex flex-column">
                     <span class="text-bold text-lg">$ {{totalProfit|floatformat:2}}</span>
-                    <span>Sales Over Time</span>
+                    {% if adminState %}
+                      <span>Sales Over Time</span>
+                    {% else %}
+                      <span>Money spent</span>
+                    {% endif %}
                   </p>
                   <p class="ml-auto d-flex flex-column text-right">
                     {% if profitStonkUp %}
@@ -194,7 +242,11 @@
                         <i class="ion ion-android-arrow-down text-warning"></i> {{thisWeekStonk|floatformat:2}} %
                       </span>
                     {% endif %}
-                    <span class="text-muted">PRODUCTS SOLD RATE</span>
+                    {% if adminState %}
+                      <span class="text-muted">PRODUCTS SOLD RATE</span>
+                    {% else %}
+                      <span class="text-muted">PRODUCTS BOUGHT RATE</span>
+                    {% endif %}
                   </p>
                 </div>
                 <!-- /.d-flex -->
@@ -212,19 +264,33 @@
                         <i class="ion ion-android-arrow-down text-warning"></i> {{thisMonthStonk|floatformat:2}}%
                       </span>
                     {% endif %}
-                    <span class="text-muted">SALES RATE PER MONTH</span>
+                    {% if adminState %}
+                      <span class="text-muted">SALES RATE PER MONTH</span>
+                    {% else %}
+                      <span class="text-muted">SPENT RATE PER MONTH</span>
+                    {% endif %}
+                   
                   </p>
                 </div>
                 <!-- /.d-flex -->
                 <div class="d-flex justify-content-between align-items-center mb-0">
                   <p class="text-danger text-xl">
-                    <i class="ion ion-ios-people-outline"></i>
+                    {% if adminState %}
+                      <i class="ion ion-ios-people-outline"></i>
+                    {% else %}
+                      <i class="ion ion-cash "></i>
+                    {% endif %}
                   </p>
                   <p class="d-flex flex-column text-right">
                     <span class="font-weight-bold">
-                      {{customerCount}}
+                      {{totalProduct}}
                     </span>
-                    <span class="text-muted">TOTAL CUSTOMER OVER TIME</span>
+                    {% if adminState %}
+                      <span class="text-muted">TOTAL CUSTOMER OVER TIME</span>
+                    {% else %}
+                      <span class="text-muted">TOTAL PRODUCT BOUGHT OVER TIME</span>
+                    {% endif %}
+                    
                   </p>
                 </div>
                 <!-- /.d-flex -->

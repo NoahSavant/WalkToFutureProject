@@ -439,7 +439,10 @@ def profile(request):
 def getTopProduct(top):
     return  models.Product.objects.filter().order_by('-sold')[:top]
 
+@login_required(login_url='login')
 def dashboard(request):
+
+    user = request.user
     products = getTopProduct(10)
     avg = 0.0
 
@@ -457,8 +460,17 @@ def dashboard(request):
             sq.append(size_quantity[0])
         else:
             break
-
-    bill = models.Bill.objects.all()
+    order = []
+    totalProduct = 0 # for customer
+    adminState = False
+    if request.user.has_perm('Staff status'):
+        bill = models.Bill.objects.all()
+        adminState = True
+    else:
+        bill = models.Bill.objects.filter(user = user)
+        order = models.Bill.objects.filter(user = user).order_by('-checkout_date')[:1]
+        for b in bill:
+            totalProduct = totalProduct + b.quantity
     today = datetime.now()
     # get date last week
     thisWeek = [
@@ -541,10 +553,13 @@ def dashboard(request):
         totalSalesLastWeek = totalSalesLastWeek + i
 
     #stonk product this week
-    thisWeekStonk = totalSalesWeek / totalSalesLastWeek
+    if totalSalesLastWeek != 0:
+        thisWeekStonk = totalSalesWeek / totalSalesLastWeek
+    else:
+        thisWeekStonk = 0
 
     totalSales = totalSalesWeek + totalSalesLastWeek
-    if thisWeekStonk >= 1:
+    if thisWeekStonk >= 1 or thisWeekStonk == 0:
         stonkUp = True 
     else:
         stonkUp = False 
@@ -580,7 +595,7 @@ def dashboard(request):
                         billThisMonth.append(b)
                     elif i ==(date.today().month - 1 ):
                         billLastMonth.append(b)
-                    thisYear[i-1]+=b.quantity
+                    thisYear[i-1]+=b.total
 
     #last year
     for b in bill:
@@ -589,12 +604,16 @@ def dashboard(request):
             totalProfitsLastYear =totalProfitsLastYear + b.total
             for i in range(1,12):
                 if b.checkout_date >= datetime(date.today().year-1, i, 1) and b.checkout_date < datetime(date.today().year-1, i+1, 1):
-                    lastYear[i-1]+=b.quantity
+                    lastYear[i-1]+=b.total
 
 
     totalYearProfit = totalProfitsLastYear + totalProfitsYear
     #stonk profit this year
-    thisYearStonk = totalProfitsYear / totalProfitsLastYear
+
+    if totalProfitsLastYear != 0:
+        thisYearStonk = totalProfitsYear / totalProfitsLastYear
+    else:
+        thisYearStonk = 0
     
     #total profit month
     for i in billThisMonth:
@@ -605,10 +624,13 @@ def dashboard(request):
         totalProfitLastMonth = totalProfitLastMonth + i.total
     
     #stonk profit this month
-    thisMonthStonk = totalProfitMonth / totalProfitLastMonth
+    if totalProfitLastMonth !=0:
+        thisMonthStonk = totalProfitMonth / totalProfitLastMonth
+    else:
+        thisMonthStonk = 0
 
 
-    if thisMonthStonk >= 1:
+    if thisMonthStonk >= 1 or thisMonthStonk == 0:
         profitStonkUp = True 
     else:
         profitStonkUp = False 
@@ -640,7 +662,11 @@ def dashboard(request):
                 'totalProfit':totalYearProfit,
                 'thisMonthStonk':thisMonthStonk,
                 'profitStonkUp':profitStonkUp,
-                'customerCount':cus.count()}
+                'customerCount':cus.count(),
+                'adminState':adminState,
+                'order':order,
+                'totalProduct':totalProduct
+                }
 
     
     return render(request,'store/dashboard.html',context)

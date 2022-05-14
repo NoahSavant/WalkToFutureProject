@@ -5,6 +5,7 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from numpy import size
+from pytz import UTC, utc
 from zmq import Message
 from . import models
 from .models import Customer
@@ -12,12 +13,13 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.conf import settings
 import random
 from django.contrib.auth.models import User
+from dateutil.relativedelta import relativedelta
 # Create your views here.
 
 
@@ -305,8 +307,19 @@ def order_complete(request):
         sq = models.Size_Quantity.objects.get(product=order.sq.product, size = order.sq.size)
         sq.quantity = sq.quantity - order.quantity
         sq.save() 
+
+        product = models.Product.objects.get(id = order.sq.product.id)
+        product.sold =  product.sold + order.quantity
+        product.save()
         order.delete()
 
+    # convert state to hot/ top 10 sold to hot product
+
+    product = models.Product.objects.filter(sold__gte = 1).order_by('-sold')[:10]
+    for pro in product:
+        if pro.status == "New":
+            pro.status = "Hot"
+            pro.save()
 
     return render(request,'store/order_complete.html', {
         'phone': phone,
@@ -424,3 +437,209 @@ def profile(request):
         'list': list
     })
 
+def dashboard(request):
+    products = models.Product.objects.filter(status__contains = 'Hot').order_by('-sold')[:10]
+    avg = 0.0
+
+    for item in products:
+        avg = avg + item.sold
+    avg = avg / 10
+
+    
+    size_quantity = models.Size_Quantity.objects.all()
+    sq= []
+    for pro in products:
+        if len(sq)<3:
+            pro.statitic =  pro.sold / avg 
+            pro.save()
+            size_quantity = models.Size_Quantity.objects.filter(product = pro)
+            sq.append(size_quantity[0])
+        else:
+            break
+
+    bill = models.Bill.objects.all()
+    today = datetime.now()
+    # get date last week
+    thisWeek = [
+       0, #Mo
+       0, #Tu
+       0, #We
+       0, #Th
+       0, #Fr
+       0, #Sa
+       0, #Su
+    ]
+    lastWeek = [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    ]
+    thisYear = [
+        0, #jan
+        0, #feb
+        0, #march
+        0, #april
+        0, #May
+        0, #june
+        0, #junly
+        0, #August
+        0, #September
+        0, #october
+        0, #november
+        0, #december
+            
+    ]
+    lastYear = [
+        0, #jan
+        0, #feb
+        0, #march
+        0, #april
+        0, #May
+        0, #june
+        0, #junly
+        0, #August
+        0, #September
+        0, #october
+        0, #november
+        0, #december
+    ]
+
+
+
+    #this week
+    for b in bill:
+        b.checkout_date = b.checkout_date.replace(tzinfo=None) 
+        if  b.checkout_date <= (today - timedelta(days=0)) and  b.checkout_date >= (today - timedelta(days=today.weekday()+1)):
+            for i in range(0,today.weekday()+1):
+                time = today-timedelta(days=i)
+                if b.checkout_date.date() == time.date():
+                   thisWeek[today.weekday()-i]+=b.quantity
+
+   # last week   
+    for b in bill:
+        b.checkout_date = b.checkout_date.replace(tzinfo=None) 
+        if  b.checkout_date <= (today - timedelta(days=today.weekday()+1)) and  b.checkout_date >= (today - timedelta(days=today.weekday()+8)):
+            for i in range(today.weekday()+1,today.weekday()+8):
+                time = today-timedelta(days=i)
+                if b.checkout_date.date() == time.date():
+                   lastWeek[today.weekday()-i]+=b.quantity
+
+    #total this week sold product
+    totalSalesWeek = 0
+    for i in thisWeek:
+        totalSalesWeek = totalSalesWeek + i
+
+    #totla last week sold product
+
+    totalSalesLastWeek = 0
+    for i in lastWeek:
+        totalSalesLastWeek = totalSalesLastWeek + i
+
+    #stonk product this week
+    thisWeekStonk = totalSalesWeek / totalSalesLastWeek
+
+    totalSales = totalSalesWeek + totalSalesLastWeek
+    if thisWeekStonk >= 1:
+        stonkUp = True 
+    else:
+        stonkUp = False 
+
+    #total this year profits
+    totalProfitsYear = 0
+
+    #total last year profits
+    totalProfitsLastYear = 0
+
+    #total this month profit 
+    totalProfitMonth = 0
+
+    #total last month profit 
+    totalProfitLastMonth = 0
+
+    #total profit
+    totalProfit = 0
+
+    billThisMonth = []
+    billLastMonth = []
+
+    # sales
+
+    #this year
+    for b in bill:
+        b.checkout_date = b.checkout_date.replace(tzinfo=None) 
+        if b.checkout_date <= (today - relativedelta(years=0)) and b.checkout_date >=  datetime(date.today().year, 1, 1):
+            totalProfitsYear = totalProfitsYear + b.total
+            for i in range(1,12):
+                if b.checkout_date >= datetime(date.today().year, i, 1) and b.checkout_date < datetime(date.today().year, i+1, 1):
+                    if i == date.today().month:
+                        billThisMonth.append(b)
+                    elif i ==(date.today().month - 1 ):
+                        billLastMonth.append(b)
+                    thisYear[i-1]+=b.quantity
+
+    #last year
+    for b in bill:
+        b.checkout_date = b.checkout_date.replace(tzinfo=None) 
+        if b.checkout_date >= datetime(date.today().year-1, 1, 1) and  b.checkout_date <= datetime(date.today().year-1, 12, 31):
+            totalProfitsLastYear =totalProfitsLastYear + b.total
+            for i in range(1,12):
+                if b.checkout_date >= datetime(date.today().year-1, i, 1) and b.checkout_date < datetime(date.today().year-1, i+1, 1):
+                    lastYear[i-1]+=b.quantity
+
+
+    totalYearProfit = totalProfitsLastYear + totalProfitsYear
+    #stonk profit this year
+    thisYearStonk = totalProfitsYear / totalProfitsLastYear
+    
+    #total profit month
+    for i in billThisMonth:
+        totalProfitMonth = totalProfitMonth + i.total
+
+    #total profit last month
+    for i in billLastMonth:
+        totalProfitLastMonth = totalProfitLastMonth + i.total
+    
+    #stonk profit this month
+    thisMonthStonk = totalProfitMonth / totalProfitLastMonth
+
+
+    if thisMonthStonk >= 1:
+        profitStonkUp = True 
+    else:
+        profitStonkUp = False 
+
+
+    monthLabel2 = ['AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    monthLabel1 = ['JAN','FEB','MAC','APR','MAY','JUN','JUL']
+    if today.month >= 6:
+        thisYear1 = thisYear[7:13]
+        lastYear1 = lastYear1[7:13]
+        monthLabel = monthLabel2
+    else:
+        thisYear1=thisYear[:7]
+        lastYear1 = lastYear[:7]
+        monthLabel = monthLabel1
+
+    cus = models.Customer.objects.all()
+
+
+    context = {'sizeQuantity':sq,
+                'thisWeek':thisWeek,
+                'lastWeek':lastWeek,
+                'thisYear':thisYear1,
+                'lastYear':lastYear1,
+                'monthLabel':monthLabel,
+                'totalWeek':totalSales,
+                'thisWeekStonk': thisWeekStonk,
+                'stonkUp':stonkUp,
+                'totalProfit':totalYearProfit,
+                'thisMonthStonk':thisMonthStonk,
+                'profitStonkUp':profitStonkUp,
+                'customerCount':cus.count()}
+
+    
+    return render(request,'store/dashboard.html',context)

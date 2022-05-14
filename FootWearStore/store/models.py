@@ -13,7 +13,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to='images')
     status = models.CharField(max_length=50)
     slug = models.SlugField()
-
+    sold = models.IntegerField(default=0)
+    statitic = models.FloatField(default=0)
     def __str__(self):
         return self.name
 

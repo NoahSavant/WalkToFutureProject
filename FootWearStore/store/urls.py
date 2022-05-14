@@ -13,5 +13,6 @@ urlpatterns = [
     path('contact/', views.contact, name = "contact"),
     path('register_successfully/', views.register_successfully,name = "register_successfully"),
     path('verify/',views.verify, name ="verify"),
-    path('profile/',views.profile, name ='profile' )
+    path('profile/',views.profile, name ='profile' ),
+    path('dashboard/',views.dashboard,name = 'dashboard'),
 ]

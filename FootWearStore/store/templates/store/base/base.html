@@ -88,7 +88,7 @@ $(document).ready(function() {
 			</button>
 			<div class="dropdown-menu">
 				<a class="dropdown-item" href="{% url 'contact' %}">Contact</a>
-				<a class="dropdown-item" href="#">Analyses</a>
+				<a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
@@ -221,6 +221,10 @@ $(document).ready(function() {
 {% endblock %}
 <!-- end profile.html -->
 
+<!-- dashboard.html -->
+{% block dashboard %}
+{% endblock %}
+<!-- end dashboard.html -->
 
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer border-top">

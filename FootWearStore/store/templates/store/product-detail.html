@@ -37,50 +37,35 @@
                     data-toggle="buttons"
                   >
                   {% for item in size_quantity %}
-                    {% if item.size == first.size %}
-                      {% if item.size == 0 %}
-                        <label class="btn btn-light active" >
-                          <input
-                            disabled
-                            type="radio"
-                            name="radio_size" checked
-                            value="{{ item.size }}"
-                          />
-                          {{ item.size }}
-                        </label>
-                      {% else %}
-                        <label class="btn btn-light active" >
-                          <input
-                            type="radio"
-                            name="radio_size" checked
-                            value="{{ item.size }}"
-                          />
-                          {{ item.size }}
-                        </label>
-                      {% endif %}
+                    {% if item.quantity == 0 %}
+                      <label class="btn btn-light " >
+                        <input
+                          disabled
+                          type="radio"
+                          name="radio_size" 
+                          value="{{ item.size }}"
+                        />
+                        {{ item.size }}
+                      </label>
                     {% else %}
-                      {% if item.size == 0 %}
-                        <label class="btn btn-light" >
-                          <input
-                            disabled
-                            type="radio"
-                            name="radio_size"
-                            value="{{ item.size }}"
-                          />
-                          {{ item.size }}
-                        </label>
-                      {% else %}
-                        <label class="btn btn-light">
-                          <input
-                            type="radio"
-                            name="radio_size"
-                            value="{{ item.size }}"
-                          />
-                          {{ item.size }}
-                        </label>
-                      {% endif %}
+                      <label class="btn btn-light  " >
+                        <input
+                          type="radio"
+                          name="radio_size" 
+                          value="{{ item.size }}"
+                        />
+                        {{ item.size }}
+                      </label>
                     {% endif %}
                   {% endfor %}
+                  <label hidden class="btn btn-light active" >
+                    <input
+                      checked
+                      type="radio"
+                      name="radio_size" 
+                      value="false"
+                    />
+                  </label>
                   </div>
                 </div>
               </div>
@@ -94,7 +79,8 @@
                     aria-disabled="true"
                   >
                     {% for item in size_quantity %}
-                    <label class="btn btn-light" >
+                    <label  class="btn btn-light disabled">
+                       
                       {{ item.quantity }}
                     </label>
                     {% endfor %}
@@ -107,6 +93,9 @@
                 <span class="text">Add to cart</span>
                 <i class="fas fa-shopping-cart"></i>
               </button>
+              {% if outOfStock %}
+                <p class="errorlist">Out of stock!!</p>
+              {% endif %}
               <input type="hidden" id="atc" name="sw" value="">
             </form>
           </article>

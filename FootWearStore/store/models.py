@@ -11,7 +11,6 @@ class Product(models.Model):
     description = models.TextField()
     brand = models.CharField(max_length=150)
     image = models.ImageField(upload_to='images')
-    status = models.CharField(max_length=50)
     slug = models.SlugField()
     sold = models.IntegerField(default=0)
     statitic = models.FloatField(default=0)

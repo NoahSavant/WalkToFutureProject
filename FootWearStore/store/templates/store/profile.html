@@ -161,7 +161,7 @@
 			<strong class="d-inline-block mr-3 ">TOP 3 RECENTS ORDER  </strong>
 		</header><br>
 		<div class="table-responsive">
-		{% for item in list %}
+		{% for item in bill_list %}
 		<table class="table table-hover">
 			<label id="date_label"><strong>{{ item.bills.0.checkout_date }}</strong></label>
 			{% for bill in item.bills %}

@@ -24,27 +24,31 @@ from dateutil.relativedelta import relativedelta
 
 
 def index(request):
-    products = models.Product.objects.filter(status="Hot")
+    products = getTopProduct(8)
     return render(request, 'store/index.html', {
         'products' : products,
     })
 
 def product_detail(request, slug):
+    outOfStock = False
     if request.user.is_authenticated and request.method == "POST":
         sw = request.POST['sw']
         product = models.Product.objects.get(slug=slug)
         if sw == "atc":
             size = request.POST['radio_size']
-            sqs = models.Size_Quantity.objects.filter(product=product, size=size)
-            list = models.Cart.objects.filter(sq=sqs[0], user=request.user)
-            if len(list) == 0:
-                new_cart = models.Cart()
-                new_cart.sq = sqs[0]
-                new_cart.user = request.user
-                new_cart.save()
+            if size != "false":
+                sqs = models.Size_Quantity.objects.filter(product=product, size=size)
+                list = models.Cart.objects.filter(sq=sqs[0], user=request.user)
+                if len(list) == 0:
+                    new_cart = models.Cart()
+                    new_cart.sq = sqs[0]
+                    new_cart.user = request.user
+                    new_cart.save()
+                else:
+                    list[0].quantity = list[0].quantity + 1
+                    list[0].save()
             else:
-                list[0].quantity = list[0].quantity + 1
-                list[0].save()
+                outOfStock = True
         elif sw == "comment":
             comment = request.POST['comment']
             comment = comment.strip(" ")
@@ -60,8 +64,8 @@ def product_detail(request, slug):
     feedbacks = models.Feedback.objects.filter(product=product)
     return render(request, 'store/product-detail.html', {
         'size_quantity': size_quantity,
-        'first':size_quantity[0],
         'feedbacks': feedbacks,
+        'outOfStock':outOfStock
     })
 
 def register_successfully(request):
@@ -281,7 +285,7 @@ def place_order(request):
         total = 0
         for item in list:
             total = total + item.total
-    context = {'list': list, 'total': total, }
+    context = {'review_list': list, 'total': total, }
     return render(request,'store/place-order.html', context)
 
 @login_required(login_url='login')
@@ -313,13 +317,8 @@ def order_complete(request):
         product.save()
         order.delete()
 
-    # convert state to hot/ top 10 sold to hot product
 
-    product = models.Product.objects.filter(sold__gte = 1).order_by('-sold')[:10]
-    for pro in product:
-        if pro.status == "New":
-            pro.status = "Hot"
-            pro.save()
+
 
     return render(request,'store/order_complete.html', {
         'phone': phone,
@@ -434,18 +433,20 @@ def profile(request):
         'cus': cus,
         'country': country,
         'edit': edit,
-        'list': list
+        'bill_list': list
     })
 
+def getTopProduct(top):
+    return  models.Product.objects.filter().order_by('-sold')[:top]
+
 def dashboard(request):
-    products = models.Product.objects.filter(status__contains = 'Hot').order_by('-sold')[:10]
+    products = getTopProduct(10)
     avg = 0.0
 
     for item in products:
         avg = avg + item.sold
     avg = avg / 10
 
-    
     size_quantity = models.Size_Quantity.objects.all()
     sq= []
     for pro in products:

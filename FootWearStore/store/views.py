@@ -1,4 +1,5 @@
 from email import message
+import math
 from tkinter import messagebox
 from xmlrpc.client import DateTime
 from django.core.mail import EmailMessage
@@ -470,6 +471,7 @@ def dashboard(request):
         bill = models.Bill.objects.filter(user = user)
         order1 = models.Bill.objects.filter(user = user).order_by('-checkout_date')[0]
         order =  models.Bill.objects.filter(user = user, checkout_date = order1.checkout_date)
+        print(order)
         for b in bill:
             totalProduct = totalProduct + b.quantity
     today = datetime.now()
@@ -560,7 +562,7 @@ def dashboard(request):
         thisWeekStonk = 0
 
     totalSales = totalSalesWeek 
-    if thisWeekStonk >= 1 or thisWeekStonk == 0:
+    if (totalSalesWeek / totalSalesLastWeek) >= 1 or thisWeekStonk == 0:
         stonkUp = True 
     else:
         stonkUp = False 
@@ -607,9 +609,7 @@ def dashboard(request):
                 if b.checkout_date >= datetime(date.today().year-1, i, 1) and b.checkout_date < datetime(date.today().year-1, i+1, 1):
                     lastYear[i-1]+=b.total
 
-    print("haaaaaaaaaaaaaaaaa")
-    print(totalProfitsLastYear)
-    totalYearProfit =  totalProfitsYear + totalProfitsLastYear
+    totalYearProfit =  totalProfitsYear
     #stonk profit this year
 
     if totalProfitsLastYear != 0:
@@ -632,7 +632,7 @@ def dashboard(request):
         thisMonthStonk = 0
 
 
-    if thisMonthStonk >= 1 or thisMonthStonk == 0:
+    if (totalProfitMonth / totalProfitLastMonth) >= 1 or thisMonthStonk == 0:
         profitStonkUp = True 
     else:
         profitStonkUp = False 
@@ -651,6 +651,8 @@ def dashboard(request):
 
     cus = models.Customer.objects.all()
 
+    thisYear1 = [round(num, 2) for num in thisYear1]
+    lastYear1 = [round(num, 2) for num in lastYear1]
 
     context = {'sizeQuantity':sq,
                 'thisWeek':thisWeek,

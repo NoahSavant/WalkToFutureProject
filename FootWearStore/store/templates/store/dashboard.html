@@ -39,7 +39,7 @@
                   {% if adminState %}
                     <h3 class="card-title">Products sold per Days</h3>
                   {% else %}
-                    <h3 class="card-title">Products bought</h3>
+                    <h3 class="card-title">Products bought this week</h3>
                   {% endif %}
                 </div>
               </div>
@@ -169,8 +169,11 @@
             <div class="card">
               <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Sales</h3>
-                  
+                  {% if adminState %}
+                    <h3 class="card-title">Sales this year</h3>
+                  {% else %}
+                    <span>Money spent this year</span>
+                  {% endif %}
                 </div>
               </div>
               <div class="card-body">

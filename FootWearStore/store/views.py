@@ -61,7 +61,8 @@ def product_detail(request, slug):
                 fb.time = datetime.now().strftime("%m/%d/%Y")
                 fb.save()
     product = models.Product.objects.get(slug=slug)
-    size_quantity = models.Size_Quantity.objects.filter(product=product)
+    size_quantity = models.Size_Quantity.objects.filter(product=product).order_by('size')
+    print(size_quantity)
     feedbacks = models.Feedback.objects.filter(product=product)
     return render(request, 'store/product-detail.html', {
         'size_quantity': size_quantity,
@@ -318,9 +319,6 @@ def order_complete(request):
         product.save()
         order.delete()
 
-
-
-
     return render(request,'store/order_complete.html', {
         'phone': phone,
         'address': address,
@@ -438,7 +436,7 @@ def profile(request):
     })
 
 def getTopProduct(top):
-    return  models.Product.objects.filter().order_by('-sold')[:top]
+    return models.Product.objects.all().order_by('-sold')[:top]
 
 @login_required(login_url='login')
 def dashboard(request):

@@ -4,7 +4,7 @@ from . import models
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price')
-    list_filter = ('price',)
+    list_filter = ('price', 'sold', 'brand',)
     prepopulated_fields = {'slug': ('name', ),}
     
 admin.site.register(models.Product, ProductAdmin)

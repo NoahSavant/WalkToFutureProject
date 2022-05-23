@@ -62,7 +62,6 @@ def product_detail(request, slug):
                 fb.save()
     product = models.Product.objects.get(slug=slug)
     size_quantity = models.Size_Quantity.objects.filter(product=product).order_by('size')
-    print(size_quantity)
     feedbacks = models.Feedback.objects.filter(product=product)
     return render(request, 'store/product-detail.html', {
         'size_quantity': size_quantity,
@@ -297,7 +296,7 @@ def order_complete(request):
     customer = models.Customer.objects.get(user=request.user)
     info = {}
     info['order'] = request.user.id
-    info['date'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    info['date'] = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
     orders = models.Cart.objects.filter(user=request.user)
     odersNew = orders
     total = 0
